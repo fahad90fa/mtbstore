@@ -1,0 +1,411 @@
+{% extends 'ecom/base.html' %}
+{% load static %}
+{% block mainContent %}
+  <!-- Main Content -->
+  <div class="mn-main-content">
+    <div class="mn-breadcrumb m-b-30">
+      <div class="row">
+        <div class="col-12">
+          <div class="row gi_breadcrumb_inner">
+            <div class="col-md-6 col-sm-12">
+              <h2 class="mn-breadcrumb-title">Product Page</h2>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <!-- mn-breadcrumb-list start -->
+              <ul class="mn-breadcrumb-list">
+                <li class="mn-breadcrumb-item">
+                  <a href="/">Home</a>
+                </li>
+                <li class="mn-breadcrumb-item">Product Page</li>
+                <li class="mn-breadcrumb-item active">{{ product.title }}</li>
+              </ul>
+              <!-- mn-breadcrumb-list end -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xxl-12">
+        <section class="mn-single-product">
+          <div class="row">
+            <div class="mn-pro-rightside mn-common-rightside col-lg-12 col-md-12 m-b-15">
+              <!-- Single product content Start -->
+              <div class="single-pro-block">
+                <div class="single-pro-inner">
+                  <div class="row">
+                    <div class="single-pro-img single-pro-img-no-sidebar">
+                      <div class="single-product-scroll">
+                        <div class="single-product-cover">
+                          <div class="single-slide zoom-image-hover">
+                            {% if product.img %}
+                            <img class="img-responsive" src="/media/{{ product.img }}" alt="" />
+                            {% else %}
+                            <img class="img-responsive" src="{% static 'ecom/assets/img/product/img_not_found.png' %}" alt="" />
+                            {% endif %}
+                          </div>
+                        </div>
+                        <div class="single-nav-thumb">
+                          <div class="single-slide">
+                            {% if product.img %}
+                            <img class="img-responsive" src="/media/{{ product.img }}" alt="" />
+                            {% else %}
+                            <img class="img-responsive" src="{% static 'ecom/assets/img/product/img_not_found.png' %}" alt="" />
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="single-pro-desc single-pro-desc-no-sidebar m-t-991">
+                      <div class="single-pro-content">
+                        <h5 class="mn-single-title">{{ product.title }}</h5>
+                        <div class="mn-single-rating-wrap">
+                          <div class="mn-single-rating mn-pro-rating">
+                            {% for i in "12345" %}
+                              {% if avg_rating and forloop.counter <= avg_rating %}
+                                <i class="ri-star-fill"></i>
+                              {% else %}
+                              <i class="ri-star-fill grey"></i>
+                              {% endif %}
+                            {% endfor %}
+                          </div>
+                          <span class="mn-read-review">|&nbsp;&nbsp;<a href="#mn-spt-nav-review">{{ total_reviews }} Ratings</a></span>
+                        </div>
+                        
+
+                        <div class="mn-single-price-stoke">
+                          <div class="mn-single-stoke">
+                            <span class="mn-single-sku">SKU#: {{ product.prod_id }}</span>
+                            {% if product.available_product|add:"0" > 0 %}
+                            <span class="mn-single-ps-title in-stock">IN STOCK</span>
+                            {% else %}
+                            <span class="mn-single-ps-title out-stock">OUT OF STOCK</span>
+                            {% endif %}
+                          </div>
+
+                        </div>
+                        {% if product.show_price and product.base_price %}
+                          <div class="mn-single-price-wrap">
+                            <div class="mn-single-price">
+                              <span class="new-price">PKR {{ product.base_price }}</span>
+                            </div>
+                          </div>
+                        {% endif %}
+
+                        <div class="mn-single-desc">{{ product.description|truncatechars:600|safe }}</div>
+                        <div class="mn-single-list">
+                          <ul>
+                            {% for field in product.custom_fields.all|slice:":3" %}
+                              <li>
+                                <strong>{{ field.field_name }} :</strong>
+                                {{ field.default_value|default:"—" }}
+                              </li>
+                            {% endfor %}
+                          
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Single product content End -->
+
+              <!-- Single product tab start -->
+              <div class="mn-single-pro-tab">
+                <div class="mn-single-pro-tab-wrapper">
+                  <div class="mn-single-pro-tab-nav">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#mn-spt-nav-details" type="button" role="tab" aria-controls="mn-spt-nav-details" aria-selected="true">Detail</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="info-tab" data-bs-toggle="tab" data-bs-target="#mn-spt-nav-info" type="button" role="tab" aria-controls="mn-spt-nav-info" aria-selected="false">Specifications</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#mn-spt-nav-review" type="button" role="tab" aria-controls="mn-spt-nav-review" aria-selected="false">Reviews</button>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="tab-content mn-single-pro-tab-content">
+                    <div id="mn-spt-nav-details" class="tab-pane fade show active">
+                      <div class="mn-single-pro-tab-desc">
+                        <p>{{ product.description|safe }}</p>
+                      </div>
+                    </div>
+                    <div id="mn-spt-nav-info" class="tab-pane fade">
+                      <div class="mn-single-pro-tab-moreinfo">
+                        <p>Detailed specifications of this product are listed above, including key features, materials, and technical details provided by the manufacturer.</p>
+
+                        <ul>
+                            {% if product.custom_fields.all %}
+                              {% for field in product.custom_fields.all %}
+                                <li>
+                                  <span>{{ field.field_name }}</span> {{ field.default_value|default:"—" }}
+                                </li>
+                                {% endfor %}
+                                {% else %}
+                                  <li>No specifications available for this product.</li>
+                            {% endif %}
+                        </ul>
+                      </div>
+                    </div>
+                    <div id="mn-spt-nav-review" class="tab-pane fade">
+                      <div class="row">
+                        <div class="mn-t-review-wrapper mt-0">
+
+							{% for review in approved_reviews %}
+							<div class="mn-t-review-item">
+
+								<div class="mn-t-review-avtar">
+								<!-- static avatar for now -->
+								<img src="{% static '/assets/media/avatars/blank.png' %}" alt="user" />
+								</div>
+
+								<div class="mn-t-review-content">
+								<div class="mn-t-review-top">
+									<div class="mn-t-review-name">
+									{{ review.name }}
+									</div>
+
+									<div class="mn-t-review-rating mn-pro-rating">
+									{% for i in "12345" %}
+										{% if forloop.counter <= review.rating %}
+										<i class="ri-star-fill"></i>
+										{% else %}
+										<i class="ri-star-fill grey"></i>
+										{% endif %}
+									{% endfor %}
+									</div>
+								</div>
+
+								<div class="mn-t-review-bottom">
+									{% if review.comment %}
+									<p>{{ review.comment }}</p>
+									{% else %}
+									<p><em>No comment provided.</em></p>
+									{% endif %}
+								</div>
+								</div>
+
+							</div>
+							{% empty %}
+							<!-- No reviews fallback -->
+							<div class="mn-t-review-item">
+								<div class="mn-t-review-content">
+								<p style="margin:0;">
+									No reviews yet. Be the first to review this product.
+								</p>
+								</div>
+							</div>
+							{% endfor %}
+
+							</div>
+
+
+                        <div class="mn-ratting-content">
+							<h3>Add a Review</h3>
+
+							<div class="mn-ratting-form">
+								<div id="review-message" style="margin-bottom:10px;"></div>
+
+								<form id="review-form" action="{% url 'submit_review' %}" method="post">
+
+								{% csrf_token %}
+
+								<!-- product reference -->
+								<input type="hidden" name="product_id" value="{{ product.prod_id }}">
+								<input type="hidden" name="rating" id="review-rating" value="0">
+
+								<!-- Rating -->
+								<div class="mn-ratting-star">
+									<span>Your rating:</span>
+									<div class="mn-t-review-rating mn-pro-rating">
+									<i class="ri-star-fill grey" data-value="1"></i>
+									<i class="ri-star-fill grey" data-value="2"></i>
+									<i class="ri-star-fill grey" data-value="3"></i>
+									<i class="ri-star-fill grey" data-value="4"></i>
+									<i class="ri-star-fill grey" data-value="5"></i>
+									</div>
+								</div>
+
+								<!-- Name -->
+								<div class="mn-ratting-input">
+									<input
+									name="name"
+									placeholder="Name"
+									type="text"
+									required
+									{% if request.user.is_authenticated %}
+										value="{{ request.user.get_full_name|default:request.user.username }}"
+									{% endif %}
+									/>
+								</div>
+
+								<!-- Email -->
+								<div class="mn-ratting-input">
+									<input
+									name="email"
+									placeholder="Email*"
+									type="email"
+									required
+									{% if request.user.is_authenticated %}
+										value="{{ request.user.email }}"
+									{% endif %}
+									/>
+								</div>
+
+								<!-- Comment -->
+								<div class="mn-ratting-input form-submit">
+									<textarea
+									name="comment"
+									placeholder="Enter Your Comment"
+									rows="4"
+									></textarea>
+
+									<button class="mn-btn-2" type="submit">
+									<span>Submit</span>
+									</button>
+								</div>
+
+								</form>
+							</div>
+						</div>
+
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Related Section -->
+              <section class="mn-related-product m-t-30">
+                <div class="mn-title">
+                  <h2>Related <span>Products</span></h2>
+                </div>
+
+                <div class="mn-related owl-carousel">
+                  {% for rp in related_products %}
+                    <div class="mn-product-card">
+                      <div class="mn-product-img">
+                        <div class="mn-img">
+                          <a href="/shop/product/{{ rp.prod_id }}/" class="image">
+                            {% if rp.img %}
+                              <img class="main-img" src="{{ rp.img.url }}" alt="{{ rp.title }}" />
+                              <img class="hover-img" src="{{ rp.img.url }}" alt="{{ rp.title }}" />
+                            {% else %}
+                              <img class="main-img" src="{% static 'ecom/assets/img/product/img_not_found.png' %}" />
+                              <img class="hover-img" src="{% static 'ecom/assets/img/product/img_not_found.png' %}" />
+                            {% endif %}
+                          </a>
+
+                          <div class="mn-options">
+                            <ul>
+                              <li>
+                                <a href="/shop/product/{{ rp.prod_id }}/" title="View"><i class="ri-eye-line"></i></a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="mn-product-detail">
+                        <div class="cat">
+                          {% with cat=rp.category.first %}
+                            {% if cat %}
+                              <a href="/shop/{{ cat.slug }}/">{{ cat.title }}</a>
+                            {% endif %}
+                          {% endwith %}
+                        </div>
+
+                        <h5><a href="/shop/product/{{ rp.prod_id }}/">{{ rp.title }}</a></h5>
+                      </div>
+                    </div>
+                  {% empty %}
+                    <!-- Optional: hide section entirely if no related products -->
+                  {% endfor %}
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+<script>
+(function () {
+  const form = document.getElementById("review-form");
+  const messageBox = document.getElementById("review-message");
+  const ratingInput = document.getElementById("review-rating");
+  const stars = document.querySelectorAll(".mn-pro-rating i");
+
+  if (!form || !ratingInput || !stars.length) return;
+
+  /* ---------- STAR CLICK HANDLING ---------- */
+  stars.forEach(star => {
+    star.addEventListener("click", function () {
+      const rating = this.getAttribute("data-value");
+
+      // set hidden input
+      ratingInput.value = rating;
+
+      // update UI
+      stars.forEach(s => {
+        const val = s.getAttribute("data-value");
+        if (val <= rating) {
+          s.classList.remove("grey");
+        } else {
+          s.classList.add("grey");
+        }
+      });
+    });
+  });
+
+  /* ---------- FORM SUBMIT (AJAX) ---------- */
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    messageBox.textContent = "";
+    messageBox.style.color = "";
+
+    if (!ratingInput.value || ratingInput.value === "0") {
+      messageBox.style.color = "red";
+      messageBox.textContent = "Please select a rating.";
+      return;
+    }
+
+    try {
+      const res = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: {
+          "X-Requested-With": "XMLHttpRequest"
+        }
+      });
+
+      if (!res.ok) throw new Error("Failed");
+
+      messageBox.style.color = "green";
+      messageBox.textContent =
+        "Your review has been submitted and is awaiting approval.";
+
+      // reset comment
+      const comment = form.querySelector("textarea[name='comment']");
+      if (comment) comment.value = "";
+
+      // reset stars
+      ratingInput.value = "0";
+      stars.forEach(s => s.classList.add("grey"));
+
+    } catch (err) {
+      messageBox.style.color = "red";
+      messageBox.textContent =
+        "Something went wrong. Please try again.";
+    }
+  });
+})();
+</script>
+
+
+
+{% endblock %}

@@ -1,0 +1,174 @@
+{% load static %}
+<header>
+  <div class="mn-header">
+    <div class="mn-header-items">
+      <div class="left-header">
+        <a class="mn-toggle-sidebar" href="javascript:void(0)"><span class="outer-ring"><span class="inner-ring"></span></span></a>
+        <a class="logo" href="/"><img alt="logo" src="{% static 'ecom/assets/img/logo/logo.png' %}" height="80px" width="229px!important" /></a>
+        <a class="mn-toggle-menu" href="javascript:void(0)">
+          <div class="header-icon">
+            <i class="ri-menu-3-fill"></i>
+          </div>
+        </a>
+      </div>
+      <div class="right-header">
+        <!-- Main Menu Start -->
+        <div class="d-none d-lg-block sticky-nav" id="mn-main-menu-desk">
+          <div class="nav-desk">
+            <div class="row">
+              <div class="col-md-12 align-self-center">
+                <div class="mn-main-menu">
+                  <ul>
+                    <li class="non-drop">
+                      <a href="/">Home</a>
+                    </li>
+                    <li class="non-drop">
+                      <a href="/shop/">Shop</a>
+                    </li>
+                    <li class="dropdown drop-list">
+                      <a class="dropdown-arrow" href="javascript:void(0)">Pages<i class="ri-arrow-down-s-line"></i></a>
+                      <ul class="sub-menu">
+                        <li>
+                          <a href="/about-us/">About Us</a>
+                        </li>
+                        <li>
+                          <a href="/contact-us/">Contact Us</a>
+                        </li>
+                        <li>
+                          <a href="/faq/">FAQ</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mn-mobile-menu-overlay"></div>
+        <div class="mn-mobile-menu" id="mn-mobile-menu">
+          <div class="mn-menu-title">
+            <span class="menu_title">My Menu</span>
+            <button class="mn-close-menu" type="button">×</button>
+          </div>
+          <div class="mn-menu-inner">
+            <div class="mn-menu-content">
+              <ul>
+                <li>
+                  <a href="/">Home</a>
+                </li>
+                <li>
+                  <a href="/shop/">Shop</a>
+                </li>
+
+                <li>
+                  <a href="javascript:void(0)">Pages</a>
+                  <ul class="sub-menu">
+                    <li>
+                      <a href="/about-us/">About Us</a>
+                    </li>
+                    <li>
+                      <a href="/contact-us/">Contact Us</a>
+                    </li>
+                    <li>
+                      <a href="/faq/">FAQ</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div class="header-res-lan-curr">
+              <!-- Social Start -->
+              <div class="header-res-social">
+                <div class="header-top-social">
+                  <ul class="mb-0">
+                    <li class="list-inline-item">
+                      <a href="#"><i class="ri-facebook-fill"></i></a>
+                    </li>
+                    <li class="list-inline-item">
+                      <a href="#"><i class="ri-twitter-fill"></i></a>
+                    </li>
+                    <li class="list-inline-item">
+                      <a href="#"><i class="ri-instagram-line"></i></a>
+                    </li>
+                    <li class="list-inline-item">
+                      <a href="#"><i class="ri-linkedin-fill"></i></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- Social End -->
+            </div>
+          </div>
+        </div>
+        <!-- Main menu icons -->
+        <div class="mn-tool-icons">
+          <div class="mn-tool-search">
+            <a class="mn-main-search mn-search-toggle" href="javascript:void(0)">
+              <svg height="512" style="enable-background:new 0 0 512 512" version="1.1" viewbox="0 0 612.01 612.01" width="512" x="0" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" y="0">
+                <g>
+                  <path d="M606.209 578.714 448.198 423.228C489.576 378.272 515 318.817 515 253.393 514.98 113.439 399.704 0 257.493 0S.006 113.439.006 253.393s115.276 253.393 257.487 253.393c61.445 0 117.801-21.253 162.068-56.586l158.624 156.099c7.729 7.614 20.277 7.614 28.006 0a19.291 19.291 0 0 0 .018-27.585zM257.493 467.8c-120.326 0-217.869-95.993-217.869-214.407S137.167 38.986 257.493 38.986c120.327 0 217.869 95.993 217.869 214.407S377.82 467.8 257.493 467.8z" data-original="#000000" fill="#000000" opacity="1"></path>
+                </g>
+              </svg>
+            </a>
+          </div>
+          <div class="mn-tool-user">
+            <a class="mn-main-user" href="javascript:void(0)">
+              <svg class="svg-icon" version="1.1" viewbox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                <path d="M512.476 648.247c-170.169 0-308.118-136.411-308.118-304.681 0-168.271 137.949-304.681 308.118-304.681 170.169 0 308.119 136.411 308.119 304.681C820.594 511.837 682.645 648.247 512.476 648.247L512.476 648.247zM512.476 100.186c-135.713 0-246.12 109.178-246.12 243.381 0 134.202 110.407 243.381 246.12 243.381 135.719 0 246.126-109.179 246.126-243.381C758.602 209.364 648.195 100.186 512.476 100.186L512.476 100.186zM935.867 985.115l-26.164 0c-9.648 0-17.779-6.941-19.384-16.35-2.646-15.426-6.277-30.52-11.142-44.95-24.769-87.686-81.337-164.13-159.104-214.266-63.232 35.203-134.235 53.64-207.597 53.64-73.555 0-144.73-18.537-208.084-53.922-78 50.131-134.75 126.68-159.564 214.549 0 0-4.893 18.172-11.795 46.4-2.136 8.723-10.035 14.9-19.112 14.9L88.133 985.116c-9.415 0-16.693-8.214-15.47-17.452C91.698 824.084 181.099 702.474 305.51 637.615c58.682 40.472 129.996 64.267 206.966 64.267 76.799 0 147.968-23.684 206.584-63.991 124.123 64.932 213.281 186.403 232.277 329.772C952.56 976.901 945.287 985.115 935.867 985.115L935.867 985.115z"></path>
+              </svg>
+            </a>
+            {% if request.user.is_authenticated %}
+              <ul class="sub-menu">
+                <li>
+                  <a href="{% url 'user_entry' %}">My Account</a>
+                </li>
+                <li>
+                  <a href="/accounts/logout/">Logout</a>
+                </li>
+              </ul>
+            {% else %}
+              <ul class="sub-menu">
+                <li>
+                  <a href="/accounts/signin/">Login</a>
+                </li>
+                <li>
+                  <a href="/accounts/signup/">Register</a>
+                </li>
+              </ul>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  ;(function () {
+    const currentPath = window.location.pathname.replace(/\/$/, '')
+  
+    document.querySelectorAll('ul li a[href]').forEach((link) => {
+      let linkPath = link.getAttribute('href')
+  
+      if (!linkPath || linkPath === 'javascript:void(0)') return
+  
+      linkPath = linkPath.replace(/\/$/, '')
+  
+      // Match exact path
+      if (linkPath === currentPath) {
+        link.classList.add('active')
+  
+        const li = link.closest('li')
+        if (li) li.classList.add('active')
+  
+        // If inside submenu, activate parent menu too
+        const parentSubMenu = link.closest('.sub-menu')
+        if (parentSubMenu) {
+          const parentLi = parentSubMenu.closest('li')
+          if (parentLi) parentLi.classList.add('active')
+        }
+      }
+    })
+  })()
+</script>

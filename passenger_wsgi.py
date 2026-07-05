@@ -1,0 +1,1 @@
+from mtbhouse.wsgi import application

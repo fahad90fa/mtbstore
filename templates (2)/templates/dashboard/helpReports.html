@@ -1,0 +1,113 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block title %}
+  Help & Reports | MT&B House
+{% endblock %}
+{% block extraStyle %}
+
+{% endblock %}
+{% block bodyContent %}
+  <!-- begin::Toolbar -->
+  <div class="toolbar py-5 py-lg-5" id="kt_toolbar">
+    <!-- begin::Container -->
+    <div id="kt_toolbar_container" class="container-xxl d-flex flex-stack flex-wrap">
+      <!-- begin::Page title -->
+      <div class="page-title d-flex flex-column me-3">
+        <!-- begin::Title -->
+        <h1 class="d-flex text-gray-900 fw-bold my-1 fs-3">Help & Reports</h1>
+        <!-- end::Title -->
+        <!-- begin::Breadcrumb -->
+        <ul class="breadcrumb breadcrumb-dot fw-semibold text-gray-600 fs-7 my-1">
+          <!-- begin::Item -->
+          <li class="breadcrumb-item text-gray-600">
+            <a href="/inventory/" class="text-gray-600 text-hover-primary">Help & Reports</a>
+          </li>
+          <!-- end::Item -->
+        </ul>
+        <!-- end::Breadcrumb -->
+      </div>
+      <!-- end::Page title -->
+    </div>
+    <!-- end::Container -->
+  </div>
+  <!-- end::Toolbar -->
+<!-- begin::Container -->
+<div id="kt_content_container" class="d-flex align-items-start container-xxl">
+  <div class="content flex-row-fluid" id="kt_content">
+    <div class="card card-flush">
+
+      <div class="card-header border-0 pt-6 pb-6">
+        <div class="card-title">
+          <div class="d-flex align-items-center position-relative my-1">
+            <input type="text" id="inventorySearch" class="form-control form-control-solid w-300px"
+                   placeholder="Live Search"
+                   onkeyup="filterTable()">
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body pt-0">
+        <table class="table align-middle table-row-dashed fs-6 gy-5" id="contactTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for msg in contact_messages %}
+            <tr class="{% if msg.is_read %}text-muted{% else %}fw-bold{% endif %}">
+              <td>{{ msg.full_name }}</td>
+              <td>{{ msg.email }}</td>
+              <td>{{ msg.phone }}</td>
+              <td>
+                {% if msg.is_read %}
+                  Read
+                {% else %}
+                  Unread
+                {% endif %}
+              </td>
+              <td>{{ msg.created_at }}</td>
+              <td>
+                {% if not msg.is_read %}
+                  <a href="{% url 'HelpReportsRead' msg.id %}" class="btn btn-sm btn-light-primary">Mark Read</a>
+                {% endif %}
+                <a href="{% url 'HelpReportsDelete' msg.id %}"
+                   class="btn btn-sm btn-light-danger"
+                   onclick="return confirm('Delete this message?')">Delete</a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" class="text-center">No messages found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- end::Container -->
+
+{% endblock %}
+{% block extraScript %}
+
+<script>
+function filterTable() {
+  let input = document.getElementById("inventorySearch").value.toLowerCase();
+  let rows = document.querySelectorAll("#contactTable tbody tr");
+
+  rows.forEach(row => {
+    row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
+  });
+}
+</script>
+
+
+{% endblock %}

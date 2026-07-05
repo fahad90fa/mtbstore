@@ -1,0 +1,241 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="images/favicon.png" rel="icon" />
+<title>Billing - MT&B House</title>
+<meta name="author" content="harnishdesign.net">
+
+<!-- Web Fonts
+======================= -->
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900' type='text/css'>
+
+<!-- Stylesheet
+======================= -->
+<link rel="stylesheet" type="text/css" href="{% static 'invoice/bootstrap.min.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'all.min.css' %}"/>
+<link rel="stylesheet" href="{% static 'invoice/style.css' %}">
+<style>
+/* MT&B House – Source bar (Payment / Stock) */
+.invoice-source-wrapper {
+  margin: 18px 0;
+}
+
+.invoice-source-bar {
+  padding: 10px 14px;
+  border-radius: 6px;
+  background-color: #e8f9ee;      /* light green like your rows */
+  border: 1px solid #c4eed3;      /* soft green border */
+  font-size: 0.84rem;
+}
+
+/* header: title left, pill right */
+.invoice-source-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.invoice-source-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.invoice-source-title i {
+  font-size: 0.95rem;
+  color: #16a34a;
+}
+
+.invoice-source-heading {
+  font-weight: 600;
+  color: #14532d;
+}
+
+.invoice-source-pill {
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: #22c55e;      /* solid green like buttons */
+  color: #ffffff;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+/* body: fields underneath in grid (wraps nicely) */
+.invoice-source-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 3px 18px;
+  margin-top: 4px;
+}
+
+.invoice-source-field strong {
+  font-weight: 600;
+  color: #14532d;
+}
+
+/* mobile tweaks */
+@media (max-width: 576px) {
+  .invoice-source-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
+.theme{
+    color: #22c55e;
+}
+</style>
+
+</head>
+<body>
+<!-- Container -->
+<div class="container-fluid invoice-container">
+  <!-- Header -->
+  <header>
+	  <div class="row align-items-center gy-3">
+		<div class="col-sm-7 text-center text-sm-start">
+          <h1 class="theme">MT&B House</h1>
+		</div>
+		<div class="col-sm-5 text-center text-sm-end">
+		  <h4 class="text-7 mb-0">Invoice</h4>
+		</div>
+	  </div>
+	  <hr>
+  </header>
+  
+  <!-- Main Content -->
+ <main>
+  <div class="row">
+    <div class="col-sm-6"><strong>Date:</strong> {{ invoice.date }}</div>
+    <div class="col-sm-6 text-sm-end"> <strong>Invoice No:</strong> {{ invoice.invoice_id }}</div>
+  </div>
+  <hr>
+  
+  <div class="row">
+    <div class="col-sm-6 text-sm-start order-sm-1"> 
+      <strong>Merchant / Client Details:</strong>
+      <address>
+        {{ merchant.first_name }}<br />
+        {{ merchant.address }}<br />
+        {{ merchant.email }}
+      </address>
+    </div>
+  </div>
+
+<!-- Source Bar (Payment OR Stock) -->
+<div class="invoice-source-wrapper">
+  {% if invoice.source_type == "Payment" %}
+    <div class="invoice-source-bar">
+      <div class="invoice-source-header">
+        <div class="invoice-source-title">
+          <i class="fa fa-credit-card"></i>
+          <span class="invoice-source-heading">Payment Source</span>
+        </div>
+        <span class="invoice-source-pill">Payment</span>
+      </div>
+      <div class="invoice-source-body">
+        <div class="invoice-source-field">
+          <strong>Method:</strong>
+          {{ invoice.payment_method|default:"-" }}
+        </div>
+        <div class="invoice-source-field">
+          <strong>Reference:</strong>
+          {{ invoice.payment_reference|default:"-" }}
+        </div>
+        <div class="invoice-source-field">
+          <strong>Received to:</strong>
+          {{ invoice.payment_to|default:merchant.first_name }}
+        </div>
+      </div>
+    </div>
+
+  {% elif invoice.source_type == "Stock" %}
+    <div class="invoice-source-bar">
+      <div class="invoice-source-header">
+        <div class="invoice-source-title">
+          <i class="fa fa-warehouse"></i>
+          <span class="invoice-source-heading">Stock Source</span>
+        </div>
+        <span class="invoice-source-pill">Stock</span>
+      </div>
+      <div class="invoice-source-body">
+        <div class="invoice-source-field">
+          <strong>Warehouse:</strong>
+          {{ invoice.stock_source|default:"Main Warehouse" }}
+        </div>
+        <div class="invoice-source-field">
+          <strong>Location:</strong>
+          {{ invoice.stock_location|default:"-" }}
+        </div>
+        <div class="invoice-source-field">
+          <strong>Handled by:</strong>
+          {{ invoice.stock_handler|default:"-" }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+<!-- /Source Bar -->
+
+
+
+  <div class="table-responsive">
+    <table class="table border mb-0">
+      <thead>
+        <tr class="bg-light">
+          <td class="col-7"><strong>Product</strong></td>
+          <td class="col-2 text-center"><strong>Rate</strong></td>
+          <td class="col-1 text-center"><strong>QTY</strong></td>
+          <td class="col-2 text-end"><strong>Amount</strong></td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td class="col-3">{{ item.product_name }}</td>
+          <td class="col-2 text-center">{{ item.rate }}</td>
+          <td class="col-1 text-center">{{ item.quantity }}</td>
+          <td class="col-2 text-end">{{ item.amount }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table border border-top-0 mb-0">
+      <tr class="bg-light">
+        <td class="text-end"><strong>Total:</strong></td>
+        <td class="col-sm-2 text-end">{{ invoice.total }}</td>
+      </tr>
+      <tr class="bg-light">
+        <td class="text-end"><strong>Debit</strong></td>
+        <td class="col-sm-2 text-end">{{ invoice.debit }}</td>
+      </tr>
+      <tr class="bg-light">
+        <td class="text-end"><strong>Credit:</strong></td>
+        <td class="col-sm-2 text-end">{{ invoice.credit }}</td>
+      </tr>
+      <tr class="bg-light">
+        <td class="text-end"><strong>Balance:</strong></td>
+        <td class="col-sm-2 text-end">{{ invoice.balance }}</td>
+      </tr>
+    </table>
+  </div>
+</main>
+
+  <!-- Footer -->
+  <footer class="text-center mt-4">
+  <p class="text-1"><strong>NOTE :</strong> This is computer generated receipt and does not require physical signature.</p>
+  <div class="btn-group btn-group-sm d-print-none"> <a href="javascript:window.print()" class="btn btn-light border text-black-50 shadow-none"><i class="fa fa-print"></i> Print & Download</a> </div>
+  </footer>
+</div>
+</body>
+</html>

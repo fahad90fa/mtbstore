@@ -1,0 +1,337 @@
+  <!-- begin::Post -->
+  <div class="content flex-row-fluid" id="kt_content">
+    <!-- begin::Form -->
+    <form id="admin_invoice_form"
+      method="post"
+      action="{% url 'AdminInvoice' %}"
+      class="form d-flex flex-column flex-lg-row">
+  {% csrf_token %}
+    <input type="hidden" name="draft_id" value="{{ active_draft.draft_id|default:'' }}">
+      <!-- begin::Aside column -->
+      <div class="w-100 flex-lg-row-auto w-lg-300px mb-7 me-7 me-lg-10">
+        <!-- begin::Order details -->
+        <div class="card card-flush py-4">
+          <!-- begin::Card header -->
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Order Details</h2>
+            </div>
+          </div>
+          <!-- end::Card header -->
+          <!-- begin::Card body -->
+          <div class="card-body pt-0">
+            <div class="d-flex flex-column gap-7">
+              <div>
+                <label class="form-label">Invoice ID</label>
+                <div class="fw-bold fs-3 text-gray-800">{{ active_draft.draft_id|default:'Draft' }}</div>
+              </div>
+              <div>
+                <label class="fs-6 fw-semibold mb-2 required">Select Client</label>
+                <select name="client_id" class="form-select form-select-solid" required>
+                    <option value="" hidden>Select client</option>
+
+                    {% for c in clients %}
+                        <option value="{{ c.mtb_id }}" {% if active_draft and active_draft.client_id == c.mtb_id %}selected{% endif %}>
+                            {{ c.first_name }} {{ c.last_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                </div>
+
+              <div>
+                <label class="fs-6 fw-semibold mb-2">Payment Method</label>
+                <input type="text" name="payment_method" class="form-control form-control-solid" placeholder="Cash, Bank Transfer, Easypaisa, JazzCash" value="{{ active_draft.payment_method|default:'' }}" />
+              </div>
+
+              <div>
+                <label class="fs-6 fw-semibold mb-2">Payment Reference / Txn ID</label>
+                <input type="text" name="payment_reference" class="form-control form-control-solid" placeholder="Txn ID / Slip No / Ref No" value="{{ active_draft.payment_reference|default:'' }}" />
+              </div>
+
+              <div>
+                <label class="fs-6 fw-semibold mb-2">Invoice Date</label>
+                <input type="date" name="invoice_date" class="form-control form-control-solid" value="{{ active_draft.date|default:'' }}" />
+              </div>
+            </div>
+          </div>
+
+          <!-- end::Card header -->
+        </div>
+        <!-- end::Order details -->
+      </div>
+      <!-- end::Aside column -->
+      <!-- begin::Main column -->
+      <div class="d-flex flex-column flex-lg-row-fluid gap-7 gap-lg-10">
+        <!-- begin::Order details -->
+        <div class="card card-flush py-4">
+          <!-- begin::Card header -->
+          <div class="card-header">
+            <div class="card-title">
+              <h2>Select Products</h2>
+            </div>
+          </div>
+          <!-- end::Card header -->
+          <!-- begin::Card body -->
+          <div class="card-body pt-0">
+            <div class="d-flex flex-column gap-10">
+              <!-- begin::Input group -->
+              <div>
+                <!-- begin::Label -->
+                <label class="form-label">Add products to this order</label>
+                <!-- end::Label -->
+                <!-- begin::Selected products -->
+                <div class="row row-cols-1 row-cols-xl-3 row-cols-md-2 border border-dashed rounded pt-3 pb-1 px-2 mb-5 mh-300px overflow-scroll" id="kt_ecommerce_edit_order_selected_products">
+                  <!-- begin::Empty message -->
+                  <span class="w-100 text-muted">Select one or more products from the list below by ticking the checkbox.</span>
+                  <!-- end::Empty message -->
+                </div>
+                <!-- begin::Selected products -->
+                <!-- begin::Total price -->
+                <div class="fw-bold fs-4 mt-5">
+                  Total Cost: PKR
+                  <span id="invoice_total">0.00</span>
+                </div>
+
+                <!-- end::Total price -->
+              </div>
+              <!-- end::Input group -->
+              <!-- begin::Separator -->
+              <div class="separator"></div>
+              <!-- end::Separator -->
+              <!-- begin::Search products -->
+              <div class="d-flex align-items-center position-relative mb-n7">
+                <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-4">
+                  <span class="path1"></span>
+                  <span class="path2"></span>
+                </i>
+                <input type="text" id="product_search" class="form-control form-control-solid w-100 w-lg-50 ps-12" placeholder="Search Products" />
+              </div>
+              <!-- end::Search products -->
+              <!-- begin::Table -->
+              <table class="table align-middle table-row-dashed fs-6 gy-5" id="products_table">
+                <thead>
+                  <tr class="text-start text-gray-500 fw-bold fs-7 text-uppercase">
+                    <th class="w-25px"></th>
+                    <th class="min-w-200px">Product</th>
+                    <th class="min-w-125px">Price (PKR)</th>
+                    <th class="min-w-100px">Qty</th>
+                    <th class="min-w-100px text-end">Available</th>
+                  </tr>
+                </thead>
+                <tbody class="fw-semibold text-gray-600">
+                  {% for p in products %}
+                  {% with selected_item=None %}
+
+                      <tr
+                        data-title="{{ p.title|lower }}"
+                        data-id="{{ p.prod_id }}"
+                        {% if active_draft %}
+                          {% for it in active_draft.items.all %}
+                            {% if it.product_id == p.prod_id %}
+                              data-selected="1"
+                              data-price="{{ it.price }}"
+                              data-qty="{{ it.quantity }}"
+                            {% endif %}
+                          {% endfor %}
+                        {% endif %}
+                      >
+
+
+                        <td>
+                            <input type="checkbox"
+                                name="products[]"
+                                value="{{ p.prod_id }}"
+                                class="form-check-input product-check" />
+
+                            </td>
+
+
+
+                        <td>
+                          <div class="d-flex align-items-center">
+                            <div class="ms-3">
+                              <div class="fw-bold">{{ p.title }}</div>
+                              <div class="text-muted fs-7">Sold: {{ p.sold_product }}</div>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td>
+  <input type="number"
+    name="price_{{ p.prod_id }}"
+    class="form-control form-control-sm price-input mb-1"
+    placeholder="{{ p.base_price }}"
+    step="0.01" />
+</td>
+
+<td>
+  <input type="number"
+  name="qty_{{ p.prod_id }}"
+  class="form-control form-control-sm qty-input"
+  value="1"
+  min="1" />
+
+</td>
+
+
+
+
+                        <td class="text-end">{{ p.available_product }}</td>
+                      </tr>
+                    {% endwith %}
+                  {% endfor %}
+                </tbody>
+              </table>
+              <!-- end::Table -->
+            </div>
+          </div>
+          <!-- end::Card header -->
+        </div>
+        <!-- end::Order details -->
+        <div class="d-flex justify-content-end gap-3">
+          <button type="submit" name="action" value="draft" class="btn btn-light-primary">Save Draft</button>
+
+          <button type="submit" name="action" value="final" class="btn btn-primary">Add / Finalize</button>
+          <button type="reset" class="btn btn-light">Cancel</button>
+
+        </div>
+      </div>
+      <!-- end::Main column -->
+    </form>
+    <!-- end::Form -->
+  </div>
+  <!-- end::Post -->
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const searchInput = document.getElementById("product_search");
+  const rows = document.querySelectorAll("#products_table tbody tr");
+  const selectedBox = document.getElementById("kt_ecommerce_edit_order_selected_products");
+  const totalSpan = document.getElementById("invoice_total");
+
+rows.forEach(row => {
+  if (row.dataset.selected === "1") {
+    const checkbox  = row.querySelector(".product-check");
+    const priceInput = row.querySelector(".price-input");
+    const qtyInput   = row.querySelector(".qty-input");
+
+    checkbox.checked = true;
+
+    if (row.dataset.price) {
+      priceInput.value = row.dataset.price;
+    }
+
+    if (row.dataset.qty && qtyInput) {
+      qtyInput.value = row.dataset.qty;
+    }
+  }
+});
+
+
+  function updateSelectedAndTotal() {
+    selectedBox.innerHTML = "";
+    let total = 0;
+
+    document.querySelectorAll(".product-check:checked").forEach(cb => {
+      const row = cb.closest("tr");
+      const title = row.querySelector(".fw-bold").innerText;
+      const priceInput = row.querySelector(".price-input");
+      const qtyInput = row.querySelector(".qty-input");
+
+      const priceRaw = (priceInput.value || priceInput.placeholder || "0").toString().trim();
+      const qtyRaw = (qtyInput?.value || "1").toString().trim();
+
+      const price = parseFloat(priceRaw) || 0;
+      const qty = parseInt(qtyRaw, 10) || 1;
+
+      const lineTotal = price * qty;
+      total += lineTotal;
+
+      selectedBox.insertAdjacentHTML("beforeend", `
+        <div class="col">
+          <div class="border rounded p-3">
+            <div class="fw-bold">${title}</div>
+            <div class="text-muted fs-7">
+              PKR ${price.toFixed(2)} × ${qty} = ${lineTotal.toFixed(2)}
+            </div>
+          </div>
+        </div>
+      `);
+    });
+
+    totalSpan.innerText = total.toFixed(2);
+  }
+
+  // 🔍 Live search
+  searchInput.addEventListener("input", () => {
+    const q = searchInput.value.toLowerCase();
+    rows.forEach(row => {
+      row.style.display = row.dataset.title.includes(q) ? "" : "none";
+    });
+  });
+
+  // ☑️ Checkbox change
+  document.querySelectorAll(".product-check").forEach(cb => {
+    cb.addEventListener("change", updateSelectedAndTotal);
+  });
+
+  // 💰 Price input change
+  document.querySelectorAll(".price-input").forEach(input => {
+    input.addEventListener("input", updateSelectedAndTotal);
+  });
+
+  // 🔢 Quantity input change
+  document.querySelectorAll(".qty-input").forEach(input => {
+    input.addEventListener("input", updateSelectedAndTotal);
+  });
+
+  // 🚀 Initial calculation (after restore)
+  updateSelectedAndTotal();
+
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const tbody = document.querySelector("#products_table tbody");
+  if (!tbody) return;
+
+  const rows = Array.from(tbody.querySelectorAll("tr"));
+
+  // 1️⃣ Move selected products to top (draft view only)
+  const selected = rows.filter(r => r.dataset.selected === "1");
+  const unselected = rows.filter(r => r.dataset.selected !== "1");
+
+  tbody.innerHTML = "";
+  [...selected, ...unselected].forEach(r => tbody.appendChild(r));
+
+  // 2️⃣ Show only first 5 rows initially
+  const MAX_VISIBLE = 5;
+  const allRows = Array.from(tbody.querySelectorAll("tr"));
+
+  if (allRows.length <= MAX_VISIBLE) return;
+
+  allRows.forEach((row, idx) => {
+    if (idx >= MAX_VISIBLE) row.style.display = "none";
+  });
+
+  // 3️⃣ Create Load More button
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "btn btn-light-primary btn-sm mt-4";
+  btn.textContent = "Load more products";
+
+  btn.addEventListener("click", () => {
+    allRows.forEach(row => row.style.display = "");
+    btn.remove();
+  });
+
+  // 4️⃣ Insert button after table
+  const table = document.getElementById("products_table");
+  table.parentNode.appendChild(btn);
+
+});
+</script>

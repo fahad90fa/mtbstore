@@ -1,0 +1,301 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Account Ledger - MT&B House</title>
+
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+
+<link rel="stylesheet" href="{% static 'invoice/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'all.min.css' %}">
+<link rel="stylesheet" href="{% static 'invoice/style.css' %}">
+
+<style>
+/* ---------- GLOBAL ---------- */
+body {
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+}
+.invoice-container {
+  width: 52% !important;
+  max-width: 52% !important;
+  padding: 0 20px !important;
+}
+
+.theme {
+  color: #0b61b4;
+}
+
+/* ---------- HEADER BARS ---------- */
+.ledger-header-main {
+  background: #0b61b4;
+  color: #fff;
+  padding: 10px 16px;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 6px 6px 0 0;
+}
+
+.ledger-header-sub {
+  background: #e5f1ff;
+  padding: 10px 16px;
+  border-radius: 0 0 6px 6px;
+  font-size: 12px;
+}
+
+.ledger-label {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* ---------- TABLE ---------- */
+.table-ledger {
+  width: 100% !important;
+  border-collapse: collapse !important;
+}
+
+.table-ledger thead tr {
+  background: #f4f8ff !important;
+  border-bottom: 1px solid #d0dae6;
+}
+
+.table-ledger th,
+.table-ledger td {
+  padding: 6px 8px !important;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+/* Only product column can wrap; everything else stays one line */
+.table-ledger th,
+.table-ledger td {
+  white-space: nowrap;
+}
+
+.table-ledger .cell-product {
+  white-space: normal;       /* allow wrapping for long product names */
+}
+
+/* Invoice header / subtotal rows */
+.invoice-header {
+  background: #e8f2ff !important;
+  font-weight: 700 !important;
+}
+
+.invoice-subtotal {
+  background: #f8fafc !important;
+  font-weight: 700 !important;
+}
+
+/* Column widths tuned so text fits in one line */
+.col-invoice { width: 9%; }
+.col-date    { width: 9%; }
+.col-product { width: 34%; }
+.col-qty     { width: 7%; text-align: center; }
+.col-rate    { width: 9%; text-align: center; }
+.col-total   { width: 10%; text-align: right; }
+.col-debit   { width: 8%; text-align: right; }
+.col-credit  { width: 7%; text-align: right; }
+.col-balance { width: 7%; text-align: right; }
+
+.text-right  { text-align: right; }
+.text-center { text-align: center; }
+
+/* ---------- PRINT ---------- */
+@media print {
+  body { margin: 0; }
+
+  .invoice-container {
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  table.table-ledger {
+    width: 100% !important;
+    zoom: 0.95;
+  }
+
+  .d-print-none {
+    display: none !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+    
+<div class="container-fluid invoice-container">
+
+  <!-- Brand header -->
+  <header class="mb-3">
+    <div class="row align-items-center">
+      <div class="col-sm-7 text-sm-start text-center">
+        <h1 class="theme mb-0">MT&B House</h1>
+      </div>
+      <div class="col-sm-5 text-sm-end text-center">
+        <h4 class="text-7 mb-0">Account Ledger</h4>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ledger header info -->
+  <div class="ledger-header-main">
+    Account Ledger Detailed
+  </div>
+  <div class="ledger-header-sub mb-3">
+    <div class="row">
+      <div class="col-md-4 col-6">
+        <span class="ledger-label">Account Name:</span>
+        {{ merchant.first_name }} {{ merchant.last_name }}
+      </div>
+      <div class="col-md-4 col-6">
+        <span class="ledger-label">Account No:</span>
+        {{ merchant.mtb_id }}
+      </div>
+      <div class="col-md-4 col-sm-12 text-md-end mt-2 mt-md-0">
+        <span class="ledger-label">Printed:</span>
+        <span id="print-date"></span>
+        <span id="print-time"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Merchant details -->
+  <section class="mb-3">
+    <div class="row">
+      <div class="col-sm-6">
+        <strong>Merchant / Client Details:</strong>
+        <address class="mb-0">
+          {{ merchant.first_name }} {{ merchant.last_name }}<br>
+          {{ merchant.address }}<br>
+          {{ merchant.email }}
+        </address>
+      </div>
+      <div class="col-sm-6 text-sm-end mt-3 mt-sm-0">
+        <strong>Current Balance:</strong> {{ merchant.merchant_balance }}
+      </div>
+    </div>
+  </section>
+
+  <!-- Ledger table -->
+  <div class="table-responsive">
+    <table class="table table-bordered table-ledger">
+      <thead>
+        <tr>
+          <th class="col-invoice">Invoice</th>
+          <th class="col-date">Date</th>
+          <th class="col-product">Product / Narration</th>
+          <th class="col-qty">Qty</th>
+          <th class="col-rate">Rate</th>
+          <th class="col-total">Total</th>
+          <th class="col-debit">Debit</th>
+          <th class="col-credit">Credit</th>
+          <th class="col-balance">Balance</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inv in invoices %}
+
+          <!-- Invoice header row -->
+          <tr class="invoice-header">
+            <td>{{ inv.invoice_id }}</td>
+            <td>{{ inv.date }}</td>
+            <td colspan="2" class="cell-product">Total Invoice Value</td>
+            <td></td>
+            <td class="text-right">{{ inv.total }}</td>
+            <td class="text-right">{{ inv.debit }}</td>
+            <td class="text-right">{{ inv.credit }}</td>
+            <td class="text-right">{{ inv.balance }}</td>
+          </tr>
+
+          <!-- Items -->
+          {% for item in inv.items.all %}
+          <tr>
+            <td></td>
+            <td></td>
+            <td class="cell-product">{{ item.product_name }}</td>
+            <td class="text-center">{{ item.quantity }}</td>
+            <td class="text-center">{{ item.rate }}</td>
+            <td class="text-right">{{ item.amount }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          {% endfor %}
+
+          <!-- Invoice subtotal -->
+          <tr class="invoice-subtotal">
+            <td></td>
+            <td></td>
+            <td colspan="2" class="cell-product">Invoice Subtotal</td>
+            <td></td>
+            <td class="text-right">{{ inv.total }}</td>
+            <td class="text-right">{{ inv.debit }}</td>
+            <td class="text-right">{{ inv.credit }}</td>
+            <td class="text-right">{{ inv.balance }}</td>
+          </tr>
+
+        {% empty %}
+          <tr>
+            <td colspan="9" class="text-center py-4">
+              No ledger entries found for this merchant.
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center mt-4">
+    <p class="mb-2">
+      <strong>NOTE :</strong> This is a computer-generated ledger and does not require a signature.
+    </p>
+    <div class="btn-group d-print-none">
+      <a href="javascript:window.print()" class="btn btn-light border shadow-none">
+        <i class="fa fa-print"></i> Print &amp; Download
+      </a>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
+
+<script>
+function updateDateTime() {
+    const now = new Date();
+
+    // Format date (e.g., 2025-12-11)
+    const date = now.toLocaleDateString("en-GB", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+    });
+
+    // Format time (e.g., 14:05:32)
+    const time = now.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+    });
+
+    document.getElementById("print-date").textContent = date;
+    document.getElementById("print-time").textContent = time;
+}
+
+// Update every second
+setInterval(updateDateTime, 1000);
+
+// Initial call
+updateDateTime();
+</script>

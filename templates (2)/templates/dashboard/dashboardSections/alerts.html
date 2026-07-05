@@ -1,0 +1,136 @@
+<meta name="csrf-token" content="{{ csrf_token }}">
+
+<!--begin::Activities drawer-->
+<div
+	id="kt_activities"
+	class="bg-body"
+	data-kt-drawer="true"
+	data-kt-drawer-name="activities"
+	data-kt-drawer-activate="true"
+	data-kt-drawer-overlay="true"
+	data-kt-drawer-width="{default:'300px', 'lg': '900px'}"
+	data-kt-drawer-direction="end"
+	data-kt-drawer-toggle="#kt_activities_toggle"
+	data-kt-drawer-close="#kt_activities_close"
+>
+	<div class="card shadow-none border-0 rounded-0">
+		<!--begin::Header-->
+		<div class="card-header" id="kt_activities_header">
+			<h3 class="card-title fw-bold text-gray-900">Alerts</h3>
+			<div class="card-toolbar">
+				<button
+					type="button"
+					class="btn btn-sm btn-icon btn-active-light-primary me-n5"
+					id="kt_activities_close"
+				>
+					<i class="ki-duotone ki-cross fs-1">
+						<span class="path1"></span>
+						<span class="path2"></span>
+					</i>
+				</button>
+			</div>
+		</div>
+		<!--end::Header-->
+
+		<!--begin::Body-->
+		<div class="card-body position-relative" id="kt_activities_body">
+			<!--begin::Content-->
+			<div
+				id="kt_activities_scroll"
+				class="position-relative scroll-y me-n5 pe-5"
+				data-kt-scroll="true"
+				data-kt-scroll-height="auto"
+				data-kt-scroll-wrappers="#kt_activities_body"
+				data-kt-scroll-dependencies="#kt_activities_header, #kt_activities_footer"
+				data-kt-scroll-offset="5px"
+			>
+				<!--begin::Timeline items-->
+				<div class="timeline timeline-border-dashed" id="alerts-container">
+					
+				</div>
+				<!--end::Timeline items-->
+			</div>
+			<!--end::Content-->
+		</div>
+		<!--end::Body-->
+	</div>
+</div>
+<!--end::Activities drawer-->
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("/api/alerts/")
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById("alerts-container");
+            container.innerHTML = "";
+
+            if (!data.alerts || data.alerts.length === 0) {
+                container.innerHTML = `
+                    <div class="d-flex align-items-center
+                                border border-dashed border-gray-300 rounded
+                                min-w-750px px-7 py-4 text-muted">
+                        No alerts here
+                    </div>
+                `;
+                return;
+            }
+
+            data.alerts.forEach(alert => {
+                container.insertAdjacentHTML("beforeend", `
+                    <div class="d-flex align-items-center
+                                border border-dashed border-gray-300 rounded
+                                min-w-750px px-7 py-3 mb-4">
+
+                        <div class="fs-5 fw-semibold text-gray-900
+                                    w-375px min-w-200px text-wrap d-block">
+                            ${alert.text}
+                        </div>
+
+                        <div class="min-w-175px"></div>
+                        <div class="flex-grow-1 min-w-100px"></div>
+                        <div class="min-w-125px"></div>
+
+                        <button
+                            class="btn btn-sm btn-light btn-active-light-primary"
+                            onclick="markAlertRead(${alert.id}, this)">
+                            View
+                        </button>
+
+                    </div>
+                `);
+            });
+        })
+        .catch(err => {
+            console.error("Alerts fetch failed:", err);
+        });
+});
+</script>
+<script>
+function getCSRFToken() {
+    const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+    return tokenMeta ? tokenMeta.getAttribute('content') : '';
+}
+</script>
+
+<script>
+function markAlertRead(alertId, btn) {
+    fetch(`/api/alerts/read/${alertId}/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCSRFToken(),
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Failed");
+        btn.closest(".d-flex").remove();
+    })
+    .catch(err => {
+        console.error("Failed to mark alert read", err);
+    });
+}
+</script>
+
+

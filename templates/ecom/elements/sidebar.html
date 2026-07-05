@@ -1,0 +1,99 @@
+{% load static %}
+
+<div class="mn-sidebar-overlay"></div>
+<div class="mn-sidebar">
+  <div class="mn-sidebar-body">
+    <button class="side-close" title="Close" type="button"></button>
+    <ul class="mn-sb-list">
+      {% for template in all_templates %}
+        <!-- Template title -->
+        <li class="mn-sb-title condense">
+          <span>{{ template.template_name }}</span>
+        </li>
+
+        {% for category in template.category.all %}
+          {% if category.subcategories.all %}
+            <!-- Category WITH subcategories -->
+            <li class="mn-sb-item sb-drop-item">
+              <a class="mn-drop-toggle" href="javascript:void(0)">
+                <span class="condense">
+                  {{ category.title }}
+                  <i class="fa fa-arrow-right" style="font-size:14px!important;"></i>
+                </span>
+              </a>
+
+              <ul class="mn-sb-drop" hidden>
+                {% for subcat in category.subcategories.all %}
+                  <li class="list">
+                    <a class="mn-page-link drop" href="/shop/{{ category.slug }}/{{ subcat.slug }}/">{{ subcat.title }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% else %}
+            <!-- Category WITHOUT subcategories -->
+            <li class="mn-sb-item sb-drop-item">
+              <a class="mn-drop-toggle" href="/shop/{{ category.slug }}/"><span class="condense">{{ category.title }}</span></a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<script>
+;(function () {
+  const toggles = Array.from(document.querySelectorAll('.mn-drop-toggle'))
+
+  function getContent(toggle) {
+    // submenu is the next UL with class mn-sb-drop
+    const el = toggle.nextElementSibling
+    return el && el.classList.contains('mn-sb-drop') ? el : null
+  }
+
+  function setIcon(toggle, isOpen) {
+    const icon = toggle.querySelector('i')
+    if (!icon) return
+    icon.classList.toggle('fa-arrow-down', isOpen)
+    icon.classList.toggle('fa-arrow-right', !isOpen)
+  }
+
+  function closeAll(except = null) {
+    toggles.forEach((tg) => {
+      if (tg === except) return
+      tg.classList.remove('is-open')
+      const content = getContent(tg)
+      if (content) content.hidden = true
+      setIcon(tg, false)
+    })
+  }
+
+  toggles.forEach((toggle) => {
+    const content = getContent(toggle)
+
+    toggle.addEventListener('click', (e) => {
+      // ✅ If NO submenu, allow normal navigation
+      if (!content) return
+
+      // ❌ Only prevent default if submenu exists
+      e.preventDefault()
+
+      const willOpen = !toggle.classList.contains('is-open')
+
+      closeAll()
+
+      if (willOpen) {
+        toggle.classList.add('is-open')
+        content.hidden = false
+        setIcon(toggle, true)
+      }
+    })
+  })
+
+  document.addEventListener('click', (e) => {
+    const inside = e.target.closest('.mn-drop-toggle, .mn-sb-drop')
+    if (!inside) closeAll()
+  })
+})()
+</script>

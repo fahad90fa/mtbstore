@@ -1,0 +1,172 @@
+<div class="mn-side-search-overlay"></div>
+      <div class="mn-side-search">
+        <div class="mn-search-inner">
+          <div class="mn-search-title">
+            <span class="search_title">Search</span>
+            <a class="mn-search-close" href="javascript:void(0)"><i class="ri-close-line"></i></a>
+          </div>
+          <div class="mn-search">
+            <form onsubmit="return false;">
+              <input id="mn-live-search-input" placeholder="Search here..." type="text" autocomplete="off"/>
+              <a href="javascript:void(0)"><i class="ri-search-line"></i></a>
+            </form>
+          </div>
+          <div class="mn-search-list">
+            <ul class="mn-search-pro-items" id="mn-search-results">
+              <!-- Recent searches injected here -->
+            </ul>
+
+          </div>
+          <div class="mn-search-also m-t-15">
+            <div class="mn-search-title">
+              <span class="search_title">Recently searches</span>
+            </div>
+            <ul id="mn-recent-searches">
+            </ul>
+          </div>
+        </div>
+      </div>
+<script>
+(function () {
+  // -------- DOM --------
+  const input = document.getElementById("mn-live-search-input");
+  const resultsBox = document.getElementById("mn-search-results");
+  const recentBox = document.getElementById("mn-recent-searches");
+  const closeBtn = document.querySelector(".mn-search-close");
+  const overlay = document.querySelector(".mn-side-search-overlay");
+
+  if (!input || !resultsBox || !recentBox) return;
+
+  // -------- CONFIG --------
+  const STORAGE_KEY = "mn_recent_searches";
+  const MAX_RECENT = 6;
+  const MIN_CHARS = 2;
+  const DEBOUNCE_MS = 250;
+
+  let debounceTimer = null;
+  let controller = null;
+
+  // -------- RECENT SEARCHES --------
+  function getRecent() {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  }
+
+  function saveRecent(term) {
+    if (!term || term.length < MIN_CHARS) return;
+
+    let items = getRecent().filter(i => i !== term);
+    items.unshift(term);
+    items = items.slice(0, MAX_RECENT);
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    renderRecent();
+  }
+
+  function renderRecent() {
+    recentBox.innerHTML = "";
+    const items = getRecent();
+
+    if (!items.length) return;
+
+    items.forEach(term => {
+      const li = document.createElement("li");
+      li.innerHTML = `<a href="javascript:void(0)">${term}</a>`;
+      li.onclick = () => {
+        input.value = term;
+        triggerSearch(term);
+      };
+      recentBox.appendChild(li);
+    });
+  }
+
+  // -------- LIVE SEARCH --------
+  function triggerSearch(value) {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => search(value), DEBOUNCE_MS);
+  }
+
+  async function search(query) {
+    if (!query || query.length < MIN_CHARS) {
+      resultsBox.innerHTML = "";
+      return;
+    }
+
+    if (controller) controller.abort();
+    controller = new AbortController();
+
+    try {
+      const res = await fetch(`/shop/search/?q=${encodeURIComponent(query)}`, {
+        signal: controller.signal
+      });
+
+      if (!res.ok) return;
+
+      const data = await res.json();
+      renderResults(data);
+    } catch (e) {
+      if (e.name !== "AbortError") {
+        resultsBox.innerHTML = "";
+      }
+    }
+  }
+  function renderNoResults() {
+  resultsBox.innerHTML = `
+    <li class="search-sidebar-list">
+      <div class="mn-pro-content">
+        <em>No products found</em>
+      </div>
+    </li>
+  `;
+}
+
+
+  function renderResults(items) {
+    resultsBox.innerHTML = "";
+
+    // Requirement: if no product found → empty
+    if (!items || !items.length) {
+  renderNoResults();
+  return;
+}
+
+    items.forEach(p => {
+      const li = document.createElement("li");
+      li.className = "search-sidebar-list";
+      li.innerHTML = `
+        <a class="mn-pro-img" href="/shop/product/${p.prod_id}/">
+          <img src="${p.img || '/static/ecom/assets/img/product/img_not_found.png'}" alt="">
+        </a>
+        <div class="mn-pro-content">
+          <a class="search-pro-title" href="/shop/product/${p.prod_id}/">${p.title}</a>
+          ${p.category ? `<a class="search-cat" href="/shop/${p.category_slug}/">${p.category}</a>` : ""}
+          ${p.price ? `<span class="search-price"><span>${p.price}</span></span>` : ""}
+        </div>
+      `;
+      resultsBox.appendChild(li);
+    });
+  }
+
+  // -------- EVENTS --------
+  input.addEventListener("input", e => {
+    triggerSearch(e.target.value.trim());
+  });
+
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      saveRecent(input.value.trim());
+    }
+  });
+
+  function resetSearch() {
+    input.value = "";
+    resultsBox.innerHTML = "";
+  }
+
+  closeBtn?.addEventListener("click", resetSearch);
+  overlay?.addEventListener("click", resetSearch);
+
+  // -------- INIT --------
+  renderRecent();
+})();
+</script>

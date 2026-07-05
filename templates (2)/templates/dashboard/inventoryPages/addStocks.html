@@ -1,0 +1,831 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block title %}
+  Inventory | MT&B House
+{% endblock %}
+{% block extraStyle %}
+
+{% endblock %}
+{% block bodyContent %}
+  <!-- begin::Toolbar -->
+  <div class="toolbar py-5 py-lg-5" id="kt_toolbar">
+    <!-- begin::Container -->
+    <div id="kt_toolbar_container" class="container-xxl d-flex flex-stack flex-wrap">
+      <!-- begin::Page title -->
+      <div class="page-title d-flex flex-column me-3">
+        <!-- begin::Title -->
+        <h1 class="d-flex text-gray-900 fw-bold my-1 fs-3">Add Stock</h1>
+        <!-- end::Title -->
+        <!-- begin::Breadcrumb -->
+        <ul class="breadcrumb breadcrumb-dot fw-semibold text-gray-600 fs-7 my-1">
+          <!-- begin::Item -->
+          <li class="breadcrumb-item text-gray-600">
+            <a href="/inventory/" class="text-gray-600 text-hover-primary">Inventory</a>
+          </li>
+          <!-- end::Item -->
+          <!-- begin::Item -->
+          <li class="breadcrumb-item text-gray-600">
+            <a href="/inventory/stocks/" class="text-gray-600 text-hover-primary">Stocks</a>
+          </li>
+          <!-- end::Item -->
+          <!-- begin::Item -->
+          <li class="breadcrumb-item text-gray-500">Add Stock</li>
+          <!-- end::Item -->
+        </ul>
+        <!-- end::Breadcrumb -->
+      </div>
+      <!-- end::Page title -->
+    
+    </div>
+    <!-- end::Container -->
+  </div>
+  <!-- end::Toolbar -->
+  <!-- begin::Container -->
+  <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
+    <!-- begin::Post -->
+    <div class="content flex-row-fluid" id="kt_content">
+      <!-- begin::Stepper -->
+      <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid gap-10" id="kt_create_account_stepper">
+        <!-- begin::Aside -->
+        <div class="card d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px w-xxl-400px">
+          <!-- begin::Wrapper -->
+          <div class="card-body px-6 px-lg-10 px-xxl-15 py-20">
+            <!-- begin::Nav -->
+            <div class="stepper-nav">
+              <!-- begin::Step 1 -->
+              <div class="stepper-item current" data-kt-stepper-element="nav">
+                <!-- begin::Wrapper -->
+                <div class="stepper-wrapper">
+                  <!-- begin::Icon -->
+                  <div class="stepper-icon w-40px h-40px">
+                    <i class="ki-duotone ki-check fs-2 stepper-check"></i>
+                    <span class="stepper-number">1</span>
+                  </div>
+                  <!-- end::Icon -->
+                  <!-- begin::Label -->
+                  <div class="stepper-label">
+                    <h3 class="stepper-title">Design</h3>
+                    <div class="stepper-desc fw-semibold">Name & Color</div>
+                  </div>
+                  <!-- end::Label -->
+                </div>
+                <!-- end::Wrapper -->
+                <!-- begin::Line -->
+                <div class="stepper-line h-40px"></div>
+                <!-- end::Line -->
+              </div>
+              <!-- end::Step 1 -->
+              <!-- begin::Step 2 -->
+              <div class="stepper-item" data-kt-stepper-element="nav">
+                <!-- begin::Wrapper -->
+                <div class="stepper-wrapper">
+                  <!-- begin::Icon -->
+                  <div class="stepper-icon w-40px h-40px">
+                    <i class="ki-duotone ki-check fs-2 stepper-check"></i>
+                    <span class="stepper-number">2</span>
+                  </div>
+                  <!-- end::Icon -->
+                  <!-- begin::Label -->
+                  <div class="stepper-label">
+                    <h3 class="stepper-title">Merchant</h3>
+                    <div class="stepper-desc fw-semibold">Account & Details</div>
+                  </div>
+                  <!-- end::Label -->
+                </div>
+                <!-- end::Wrapper -->
+                <!-- begin::Line -->
+                <div class="stepper-line h-40px"></div>
+                <!-- end::Line -->
+              </div>
+              <!-- end::Step 2 -->
+              <!-- begin::Step 3 -->
+              <div class="stepper-item" data-kt-stepper-element="nav">
+                <!-- begin::Wrapper -->
+                <div class="stepper-wrapper">
+                  <!-- begin::Icon -->
+                  <div class="stepper-icon w-40px h-40px">
+                    <i class="ki-duotone ki-check fs-2 stepper-check"></i>
+                    <span class="stepper-number">3</span>
+                  </div>
+                  <!-- end::Icon -->
+                  <!-- begin::Label -->
+                  <div class="stepper-label">
+                    <h3 class="stepper-title">Stock Overview</h3>
+                    <div class="stepper-desc fw-semibold">Products & Summary</div>
+
+                  </div>
+                  <!-- end::Label -->
+                </div>
+                <!-- end::Wrapper -->
+                <!-- begin::Line -->
+                <div class="stepper-line h-40px"></div>
+                <!-- end::Line -->
+              </div>
+              <!-- end::Step 3 -->
+              <!-- begin::Step 4 -->
+              <div class="stepper-item" data-kt-stepper-element="nav">
+                <!-- begin::Wrapper -->
+                <div class="stepper-wrapper">
+                  <!-- begin::Icon -->
+                  <div class="stepper-icon w-40px h-40px">
+                    <i class="ki-duotone ki-check fs-2 stepper-check"></i>
+                    <span class="stepper-number">4</span>
+                  </div>
+                  <!-- end::Icon -->
+                  <!-- begin::Label -->
+                  <div class="stepper-label">
+                    <h3 class="stepper-title">Billing Details</h3>
+                    <div class="stepper-desc fw-semibold">Set Your Payment Methods</div>
+                  </div>
+                  <!-- end::Label -->
+                </div>
+                <!-- end::Wrapper -->
+              </div>
+              <!-- end::Step 4 -->
+            </div>
+            <!-- end::Nav -->
+          </div>
+          <!-- end::Wrapper -->
+        </div>
+        <!-- begin::Aside -->
+        <!-- begin::Content -->
+        <div class="card d-flex flex-row-fluid flex-center">
+          <!-- begin::Form -->
+          <form class="card-body py-20 w-100 mw-xl-700px px-9" method="post" action="/inventory/stocks/add-stock/" id="kt_create_account_form">
+            {% csrf_token %}
+            <input type="hidden" name="stock_products_json" id="stock_products_json">
+            <!-- begin::Step 1 -->
+            <div class="current" data-kt-stepper-element="content">
+              <!-- begin::Wrapper -->
+              <div class="w-100">
+                <!-- begin::Input group -->
+                <div class="d-flex flex-column mb-8 fv-row">
+                  <!-- begin::Label -->
+                  <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                    <span class="required">Stock Title</span>
+                    <span class="ms-1" data-bs-toggle="tooltip" title="Specify a stock name, only visible to admin">
+                      <i class="ki-duotone ki-information-5 text-gray-500 fs-6">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                        <span class="path3"></span>
+                      </i>
+                    </span>
+                  </label>
+                  <!-- end::Label -->
+                  <div class="input-group mb-5">
+                    <input type="text" class="form-control form-control-solid" placeholder="Enter Stock Title" maxlength="30" name="name" required/>
+                    <span class="input-group-text cursor-pointer" style="z-index: 99;" id="basic-addon2">
+                        <i class="ki-duotone ki-electronic-clock fs-4"><span class="path1"></span><span class="path2"></span></i>
+                    </span>
+                </div>
+                </div>
+                <!-- end::Input group -->
+                <!-- begin::Input group -->
+                <div class="d-flex flex-column mb-8 fv-row">
+                  <!-- begin::Label -->
+                  <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+                    <span class="required">Date</span>
+                  </label>
+                  <!-- end::Label -->
+                  <div class="input-group mb-5">
+                    <input type="text" class="form-control form-control-solid" placeholder="Enter Date" maxlength="30" name="date" required/>
+                    <span class="input-group-text cursor-pointer" style="z-index: 99;" id="addDate">
+                        <i class="ki-duotone ki-electronic-clock fs-4"><span class="path1"></span><span class="path2"></span></i>
+                    </span>
+                </div>
+                </div>
+                <!-- end::Input group -->
+
+                <!-- begin::Input group -->
+                <div class="fv-row">
+                  <!-- begin::Label -->
+                  <label class="d-flex align-items-center fs-5 fw-semibold mb-4">
+                    <span class="required">Colors</span>
+                    <span class="ms-1" data-bs-toggle="tooltip" title="Select your template background color">
+                      <i class="ki-duotone ki-information-5 text-gray-500 fs-6">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                        <span class="path3"></span>
+                      </i>
+                    </span>
+                  </label>
+                  <!-- end::Label -->
+                  <!-- begin:Options -->
+                  <div class="fv-row">
+                    <!-- begin:Option -->
+                    <label class="d-flex flex-stack mb-5 cursor-pointer">
+                      <!-- begin:Label -->
+                      <span class="d-flex align-items-center me-2">
+                        <!-- begin:Icon -->
+                        <span class="symbol symbol-50px me-6"><span class="symbol-label" style="background-color: #cbf0f4"></span></span>
+                        <!-- end:Icon -->
+                        <!-- begin:Info -->
+                        <span class="d-flex flex-column"><span class="fw-bold fs-6">Water (#cbf0f4)</span></span>
+                        <!-- end:Info -->
+                      </span>
+                      <!-- end:Label -->
+                      <!-- begin:Input -->
+                      <span class="form-check form-check-custom form-check-solid"><input class="form-check-input" type="radio" name="color" value="#cbf0f4" /></span>
+                      <!-- end:Input -->
+                    </label>
+                    <!-- end::Option -->
+                    <!-- begin:Option -->
+                    <label class="d-flex flex-stack mb-5 cursor-pointer">
+                      <!-- begin:Label -->
+                      <span class="d-flex align-items-center me-2">
+                        <!-- begin:Icon -->
+                        <span class="symbol symbol-50px me-6"><span class="symbol-label" style="background-color: #F7D9E3"></span></span>
+                        <!-- end:Icon -->
+                        <!-- begin:Info -->
+                        <span class="d-flex flex-column"><span class="fw-bold fs-6">Soap (#F7D9E3)</span></span>
+                        <!-- end:Info -->
+                      </span>
+                      <!-- end:Label -->
+                      <!-- begin:Input -->
+                      <span class="form-check form-check-custom form-check-solid"><input class="form-check-input" type="radio" name="color" value="#F7D9E3" /></span>
+                      <!-- end:Input -->
+                    </label>
+                    <!-- end::Option -->
+                    <!-- begin:Option -->
+                    <label class="d-flex flex-stack mb-5 cursor-pointer">
+                      <!-- begin:Label -->
+                      <span class="d-flex align-items-center me-2">
+                        <!-- begin:Icon -->
+                        <span class="symbol symbol-50px me-6"><span class="symbol-label" style="background-color: #cbd4f4"></span></span>
+                        <!-- end:Icon -->
+                        <!-- begin:Info -->
+                        <span class="d-flex flex-column"><span class="fw-bold fs-6">Soap (#cbd4f4)</span></span>
+                        <!-- end:Info -->
+                      </span>
+                      <!-- end:Label -->
+                      <!-- begin:Input -->
+                      <span class="form-check form-check-custom form-check-solid"><input class="form-check-input" type="radio" name="color" value="#cbd4f4" /></span>
+                      <!-- end:Input -->
+                    </label>
+                    <!-- end::Option -->
+                    <!-- begin:Option -->
+                    <label class="d-flex flex-stack mb-5 cursor-pointer">
+                      <!-- begin:Label -->
+                      <span class="d-flex align-items-center me-2">
+                        <!-- begin:Icon -->
+                        <span class="symbol symbol-50px me-6"><span class="symbol-label" style="background-color: #DFF7E6"></span></span>
+                        <!-- end:Icon -->
+                        <!-- begin:Info -->
+                        <span class="d-flex flex-column"><span class="fw-bold fs-6">Nyanza (#DFF7E6)</span></span>
+                        <!-- end:Info -->
+                      </span>
+                      <!-- end:Label -->
+                      <!-- begin:Input -->
+                      <span class="form-check form-check-custom form-check-solid"><input class="form-check-input" type="radio" name="color" value="#DFF7E6" /></span>
+                      <!-- end:Input -->
+                    </label>
+                    <!-- end::Option -->
+                    <!-- begin:Option -->
+                    <label class="d-flex flex-stack mb-5 cursor-pointer">
+                      <!-- begin:Label -->
+                      <span class="d-flex align-items-center me-2">
+                        <!-- begin:Icon -->
+                        <span class="symbol symbol-50px me-6"><span class="symbol-label" style="background-color: #FFE4D9"></span></span>
+                        <!-- end:Icon -->
+                        <!-- begin:Info -->
+                        <span class="d-flex flex-column"><span class="fw-bold fs-6">Misty Rose (#FFE4D9)</span></span>
+                        <!-- end:Info -->
+                      </span>
+                      <!-- end:Label -->
+                      <!-- begin:Input -->
+                      <span class="form-check form-check-custom form-check-solid"><input class="form-check-input" type="radio" name="color" value="#FFE4D9" /></span>
+                      <!-- end:Input -->
+                    </label>
+                    <!-- end::Option -->
+                    <!-- begin:Option -->
+                    <label class="d-flex flex-stack mb-5 cursor-pointer">
+                      <!-- begin:Label -->
+                      <span class="d-flex align-items-center me-2">
+                        <!-- begin:Icon -->
+                        <span class="symbol symbol-50px me-6"><span class="symbol-label" style="background-color: #EADCF8"></span></span>
+                        <!-- end:Icon -->
+                        <!-- begin:Info -->
+                        <span class="d-flex flex-column"><span class="fw-bold fs-6">Lavender (#EADCF8)</span></span>
+                        <!-- end:Info -->
+                      </span>
+                      <!-- end:Label -->
+                      <!-- begin:Input -->
+                      <span class="form-check form-check-custom form-check-solid"><input class="form-check-input" type="radio" name="color" value="#EADCF8" /></span>
+                      <!-- end:Input -->
+                    </label>
+                    <!-- end::Option -->
+                  </div>
+                  <!-- end:Options -->
+                </div>
+                <!-- end::Input group -->
+
+
+
+
+
+              </div>
+              <!-- end::Wrapper -->
+            </div>
+            <!-- end::Step 1 -->
+            <!-- begin::Step 2 -->
+            <div data-kt-stepper-element="content">
+              <!-- begin::Wrapper -->
+              <div class="w-100">
+
+                <!--begin::Input group-->
+                <div class="d-flex flex-column mb-8">
+                    <label class="fs-6 fw-semibold mb-2">Select a Marchant</label>
+                    <!--begin::Select-->
+												<select name="merchant_mtb_id" aria-label="Select..." data-control="select2" data-placeholder="Select..." class="form-select form-select-solid">
+                          <option value=""></option>
+                                                    {% for i in merchants %}
+													<option value="{{i.mtb_id}}">{{i.first_name}}</option>
+                                                    {% endfor %}
+												</select>
+												<!--end::Select-->
+                  </div>
+												
+											    <!--end::Input group-->
+
+                 <!-- begin::Input group -->
+                  <div class="d-flex flex-column mb-8">
+                    <label class="fs-6 fw-semibold mb-2">Extra Details</label>
+                    <textarea class="form-control form-control-solid" rows="3" name="details" placeholder="Any kind of details..."></textarea>
+                  </div>
+                  <!-- end::Input group -->
+               
+               
+              </div>
+              <!-- end::Wrapper -->
+            </div>
+            <!-- end::Step 2 -->
+            <!-- begin::Step 3 -->
+            <div data-kt-stepper-element="content">
+              <!-- begin::Wrapper -->
+              <div class="w-100">
+                
+                <!--begin::Statements-->
+							<div class="card">
+								<!--begin::Header-->
+								<div class="card-header card-header-stretch">
+									<!--begin::Title-->
+									<div class="card-title">
+										<h3 class="m-0 text-gray-800">Stock Details</h3>
+									</div>
+									<!--end::Title-->
+                  <!--begin::Toolbar-->
+									<div class="card-toolbar m-0">
+										<!--begin::Tab nav-->
+										<a href="#" class="btn btn-light-primary px-6 flex-shrink-0 align-self-center" data-bs-toggle="modal" data-bs-target="#kt_modal_addStockProduct" id="kt_toolbar_primary_button">Add Product</a>
+										<!--end::Tab nav-->
+									</div>
+									<!--end::Toolbar-->
+								</div>
+								<!--end::Header-->
+								<!--begin::Tab Content-->
+								<div id="kt_referred_users_tab_content" class="tab-content">
+									<!--begin::Tab panel-->
+									<div id="kt_referrals_1" class="card-body p-0 tab-pane fade show active" role="tabpanel">
+										<div class="table-responsive">
+											<!--begin::Table-->
+											<table class="table align-middle table-row-bordered table-row-solid gy-4 gs-9" id="stockTable">
+												<!--begin::Thead-->
+												<thead class="border-gray-200 fs-5 fw-semibold bg-lighten">
+													<tr>
+														<th class="min-w-175px ps-9">Template ID</th>
+														<th class="min-w-150px px-0">Qty / Rate</th>
+														<th class="min-w-350px">Product Name</th>
+														<th class="min-w-125px">Amount</th>
+														<th class="min-w-125px text-center">Action</th>
+													</tr>
+												</thead>
+												<!--end::Thead-->
+												<!--begin::Tbody-->
+												<tbody class="fs-6 fw-semibold text-gray-600">
+													
+												</tbody>
+												<!--end::Tbody-->
+											</table>
+											<!--end::Table-->
+										</div>
+									</div>
+									<!--end::Tab panel-->
+									
+								</div>
+								<!--end::Tab Content-->
+							</div>
+							<!--end::Statements-->
+              <br>
+              <!--begin::Calculation-->
+									<div class="card card-xxl-stretch mb-5 mb-xxl-10">
+										<!--begin::Header-->
+										<div class="card-header">
+											<div class="card-title">
+												<h3>Stock Summary</h3>
+											</div>
+										</div>
+										<!--end::Header-->
+										<!--begin::Body-->
+										<div class="card-body pb-0">
+											<span class="fs-5 fw-semibold text-gray-600 pb-5 d-block"> All products added here are temporarily saved as draft items. Final stock entries will be recorded with the current date.</span>
+											<!--begin::Left Section-->
+											<div class="d-flex flex-wrap justify-content-between pb-6">
+												<!--begin::Row-->
+												<div class="d-flex flex-wrap">
+													<!--begin::Col-->
+													<div class="border border-dashed border-gray-300 w-125px rounded my-3 p-4 me-6">
+														<span class="fs-2x fw-bold text-gray-800 lh-1">
+															<span data-kt-countup="true" data-kt-countup-prefix="PKR " id="summary-category-count">0</span>
+														</span>
+														<span class="fs-6 fw-semibold text-gray-500 d-block lh-1 pt-2">Category Count</span>
+													</div>
+													<!--end::Col-->
+													<!--begin::Col-->
+													<div class="border border-dashed border-gray-300 w-125px rounded my-3 p-4 me-6">
+														<span class="fs-2x fw-bold text-gray-800 lh-1">
+														<span class="" data-kt-countup="true" id="summary-total-qty">0</span></span>
+														<span class="fs-6 fw-semibold text-gray-500 d-block lh-1 pt-2">Total Quantity</span>
+													</div>
+													<!--end::Col-->
+													<!--begin::Col-->
+													<div class="border border-dashed border-gray-300 w-125px rounded my-3 p-4 me-6">
+														<span class="fs-2x fw-bold text-gray-800 lh-1">
+															<span data-kt-countup="true" data-kt-countup-prefix="PKR " id="summary-total-amount">0</span>
+														</span>
+														<span class="fs-6 fw-semibold text-gray-500 d-block lh-1 pt-2">Total Amount</span>
+													</div>
+													<!--end::Col-->
+                          <input type="hidden" id="total_amount_hidden" name="total_amount" value="0">
+												</div>
+												<!--end::Row-->
+											</div>
+											<!--end::Left Section-->
+										</div>
+										<!--end::Body-->
+									</div>
+									<!--end::Calculation-->
+                <!--begin::Stock Info Box-->
+                <div class="card card-xxl-stretch mb-5" style="background:#e8f9ee;border:1px solid #c4eed3;">
+                    <div class="card-header" style="border-bottom:none;">
+                        <h3 class="card-title d-flex align-items-center" style="color:#14532d;gap:10px;">
+                            <i class="fa fa-warehouse" style="color:#16a34a;"></i>
+                            Stock Source Details
+                        </h3>
+                    </div>
+
+                    <div class="card-body pt-0">
+
+                        <div class="row g-5">
+
+                            <!-- Stock Source -->
+                            <div class="col-md-6">
+                                <label class="fs-6 fw-semibold mb-2">Stock Source</label>
+                                <input 
+                                    type="text" 
+                                    name="stock_source" 
+                                    class="form-control form-control-solid" 
+                                    placeholder="e.g., Main Warehouse, Online Stock, Shahra-e-Faisal Store"
+                                />
+                            </div>
+
+                            <!-- Stock Location -->
+                            <div class="col-md-6">
+                                <label class="fs-6 fw-semibold mb-2">Stock Location</label>
+                                <input 
+                                    type="text" 
+                                    name="stock_location" 
+                                    class="form-control form-control-solid" 
+                                    placeholder="e.g., Karachi, Lahore, Rack A3, Section B"
+                                />
+                            </div>
+
+                            <!-- Stock Handler -->
+                            <div class="col-md-6">
+                                <label class="fs-6 fw-semibold mb-2">Handled By</label>
+                                <input 
+                                    type="text" 
+                                    name="stock_handler" 
+                                    class="form-control form-control-solid" 
+                                    placeholder="Staff Member Name"
+                                />
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!--end::Stock Info Box-->
+                    
+              </div>
+              <!-- end::Wrapper -->
+            </div>
+            <!-- end::Step 3 -->
+            <!-- begin::Step 4 -->
+            <div data-kt-stepper-element="content">
+              <!-- begin::Wrapper -->
+              <div class="w-100">
+              <div class="w-100 text-center">
+											<!--begin::Heading-->
+											<h1 class="fw-bold text-gray-900 mb-3">Submit Stock</h1>
+                      <!--end::Heading-->
+                      <!--begin::Description-->
+                      <div class="text-muted fw-semibold fs-3">
+                      All products will be saved as drafts, and the total finance will be credited to the merchant account. 
+                      Once you submit, a PDF summary will automatically open for review.
+                      </div>
+
+											<!--end::Description-->
+											<!--begin::Illustration-->
+											<div class="text-center px-4 py-15">
+												<img src="{% static 'assets/media/illustrations/sketchy-1/9.png' %}" alt="" class="mw-100 mh-300px" />
+											</div>
+											<!--end::Illustration-->
+										</div>
+          
+              </div>
+              <!-- end::Wrapper -->
+            </div>
+            <!-- end::Step 4 -->
+           
+            <!-- begin::Actions -->
+            <div class="d-flex flex-stack pt-10">
+              <!-- begin::Wrapper -->
+              <div class="mr-2">
+                <button type="button" class="btn btn-lg btn-light-primary me-3" data-kt-stepper-action="previous">
+                  <i class="ki-duotone ki-arrow-left fs-4 me-1">
+                    <span class="path1"></span>
+                    <span class="path2"></span>
+                  </i>Back
+                </button>
+              </div>
+              <!-- end::Wrapper -->
+              <!-- begin::Wrapper -->
+              <div>
+                <button type="submit" class="btn btn-lg btn-primary me-3" data-kt-stepper-action="submit">
+                  <span class="indicator-label">
+                    Submit
+                    <i class="ki-duotone ki-arrow-right fs-3 ms-2 me-0">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                    </i>
+                  </span>
+                  <span class="indicator-progress">
+                    Please wait...
+                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                  </span>
+                </button>
+                <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next">
+                  Continue
+                  <i class="ki-duotone ki-arrow-right fs-4 ms-1 me-0">
+                    <span class="path1"></span>
+                    <span class="path2"></span>
+                  </i>
+                </button>
+              </div>
+              <!-- end::Wrapper -->
+            </div>
+            <!-- end::Actions -->
+          </form>
+          <!-- end::Form -->
+        </div>
+        <!-- end::Content -->
+      </div>
+      <!-- end::Stepper -->
+    </div>
+    <!-- end::Post -->
+  </div>
+  <!-- end::Container -->
+   {% include 'dashboard/inventoryPages/addStockProduct.html' %}
+{% endblock %}
+{% block extraScript %}
+<script>
+// ---------------------------------------------------------
+// 1) Collect table rows into JSON for backend
+// ---------------------------------------------------------
+function collectTableProducts() {
+  const tableBody = document.querySelector('#stockTable tbody');
+  const rows      = tableBody ? tableBody.querySelectorAll('tr') : [];
+  const products  = [];
+
+  rows.forEach(row => {
+    const templateId  = row.cells[0].innerText.trim();   // Template ID (visible)
+    const qtyRate     = row.cells[1].innerText.trim();   // "qty / rate"
+    const productName = row.cells[2].innerText.trim();   // Product Name
+    const amountText  = row.cells[3].innerText.trim();   // "PKR 123.45"
+
+    const [qtyStr, rateStr] = qtyRate.split(' / ');
+    const qty  = parseFloat(qtyStr)  || 0;
+    const rate = parseFloat(rateStr) || 0;
+
+    // Strip "PKR " and any non-numeric chars from amount
+    const amountClean = amountText.replace(/[^\d.]/g, '');
+    const amount      = parseFloat(amountClean) || (qty * rate);
+
+    // ðŸ”¥ NEW: read full data from row.dataset (set in the other script)
+    const basePricePre = parseFloat(row.dataset.basePricePre) || 0;           // original base_price_pre
+    const percValueRaw = row.dataset.percentageValue;
+    const percValue    = (percValueRaw === undefined || percValueRaw === "")
+                         ? null
+                         : parseFloat(percValueRaw);
+    const percType     = row.dataset.percentageType || "fixed";               // "+", "-", "fixed"
+    const retailPrice  = parseFloat(row.dataset.retailPrice) || rate;         // final retail per unit
+    const totalAmount  = parseFloat(row.dataset.totalAmount) || amount;       // final total
+
+    products.push({
+      template_id:       templateId,
+      name:              productName,
+      qty:               qty,
+      rate:              retailPrice,     // per-unit retail
+      amount:            totalAmount,     // total
+      // These match what your Django AddStock view expects:
+      base_price:        basePricePre,    // this will go to base_price_pre
+      percentage_value:  percValue,       // item.get("percentage_value")
+      percentage_type:   percType,        // item.get("percentage_type")
+      retail_price:      retailPrice      // item.get("retail_price")
+    });
+  });
+
+  const hiddenInput = document.getElementById('stock_products_json');
+  if (hiddenInput) {
+    hiddenInput.value = JSON.stringify(products);
+  }
+}
+
+// ---------------------------------------------------------
+// 2) Stepper, time icon, live summary
+// ---------------------------------------------------------
+document.addEventListener("DOMContentLoaded", function () {
+  // ---- Stepper setup ----
+  const stepper = document.getElementById("kt_create_account_stepper");
+  const steps = stepper.querySelectorAll('[data-kt-stepper-element="nav"]');
+  const contents = Array.from(document.querySelectorAll('[data-kt-stepper-element="content"]'));
+
+  const btnNext   = document.querySelector('[data-kt-stepper-action="next"]');
+  const btnPrev   = document.querySelector('[data-kt-stepper-action="previous"]');
+  const btnSubmit = document.querySelector('[data-kt-stepper-action="submit"]');
+  const mainForm  = document.getElementById("kt_create_account_form");
+
+  // safety: if something critical is missing, stop
+  if (!stepper || !steps.length || !contents.length || !btnSubmit || !mainForm) {
+    console.warn("Stepper or form elements not found, stepper script aborted.");
+    return;
+  }
+
+  let currentStep = 0;
+
+  function updateSteps() {
+    steps.forEach((step, index) => {
+      step.classList.remove("current", "completed");
+      if (index < currentStep) {
+        step.classList.add("completed");
+      } else if (index === currentStep) {
+        step.classList.add("current");
+      }
+    });
+
+    contents.forEach((content, index) => {
+      content.classList.remove("current");
+      if (index === currentStep) content.classList.add("current");
+    });
+
+    if (btnPrev)   btnPrev.style.display   = currentStep === 0 ? "none" : "inline-flex";
+    if (btnNext)   btnNext.style.display   = currentStep === steps.length - 1 ? "none" : "inline-flex";
+    if (btnSubmit) btnSubmit.style.display = currentStep === steps.length - 1 ? "inline-flex" : "none";
+  }
+
+  // Next button handler
+  if (btnNext) {
+    btnNext.addEventListener("click", function () {
+      if (currentStep < steps.length - 1) {
+        currentStep++;
+        updateSteps();
+      }
+    });
+  }
+
+  // Previous button handler
+  if (btnPrev) {
+    btnPrev.addEventListener("click", function () {
+      if (currentStep > 0) {
+        currentStep--;
+        updateSteps();
+      }
+    });
+  }
+
+  // Submit button handler
+  btnSubmit.addEventListener("click", function (e) {
+    e.preventDefault(); // weâ€™ll submit manually
+
+    const indicatorLabel    = btnSubmit.querySelector(".indicator-label");
+    const indicatorProgress = btnSubmit.querySelector(".indicator-progress");
+
+    if (indicatorLabel && indicatorProgress) {
+      indicatorLabel.style.display    = "none";
+      indicatorProgress.style.display = "inline-flex";
+    }
+
+    btnSubmit.disabled = true;
+
+    // Fill stock_products_json from table rows
+    if (typeof collectTableProducts === "function") {
+      collectTableProducts();
+    }
+
+    // Now actually submit the form
+    mainForm.submit();
+  });
+
+  // Initialize stepper UI
+  updateSteps();
+
+  // ---- Stock title "time" icon ----
+  const nameInput = document.querySelector('input[name="name"]');
+  const icon      = document.getElementById("basic-addon2");
+
+  if (nameInput && icon) {
+    icon.addEventListener("click", function () {
+      const now     = new Date();
+      const year    = now.getFullYear();
+      const month   = String(now.getMonth() + 1).padStart(2, "0");
+      const day     = String(now.getDate()).padStart(2, "0");
+      const hours   = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+
+      const formatted = `${year}-${month}-${day} ${hours}:${minutes}`;
+      nameInput.value = formatted;
+    });
+  }
+
+  // ---- Date "time" icon ----
+  const dateInput = document.querySelector('input[name="date"]');
+  const dateIcon      = document.getElementById("addDate");
+
+  if (dateInput && dateIcon) {
+    dateIcon.addEventListener("click", function () {
+      const now     = new Date();
+      const year    = now.getFullYear();
+      const month   = String(now.getMonth() + 1).padStart(2, "0");
+      const day     = String(now.getDate()).padStart(2, "0");
+      const hours   = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+
+      const formatted = `${year}-${month}-${day} ${hours}:${minutes}`;
+      dateInput.value = formatted;
+    });
+  }
+
+  // ---- Live updating stock summary by watching table ----
+  const tableBody         = document.querySelector('#stockTable tbody');
+  const categoryCountSpan = document.getElementById('summary-category-count');
+  const totalQtySpan      = document.getElementById('summary-total-qty');
+  const totalAmountSpan   = document.getElementById('summary-total-amount');
+  const totalAmountHidden = document.getElementById('total_amount_hidden');
+
+  if (!tableBody) return;
+
+  function updateStockSummary() {
+    const rows          = tableBody.querySelectorAll('tr');
+    const categoryCount = rows.length;
+    let totalQty        = 0;
+    let totalAmount     = 0;
+
+    rows.forEach(row => {
+      const [qtyStr, rateStr] = row.cells[1].innerText.split(' / ');
+      const qty  = parseFloat(qtyStr)  || 0;
+      const rate = parseFloat(rateStr) || 0;
+
+      const amountText  = row.cells[3].innerText.trim(); // "PKR 123.45"
+      const amountClean = amountText.replace(/[^\d.]/g, '');
+      const amount      = parseFloat(amountClean) || (qty * rate);
+
+      totalQty    += qty;
+      totalAmount += amount;
+    });
+
+    if (categoryCountSpan) categoryCountSpan.textContent = categoryCount;
+    if (totalQtySpan)      totalQtySpan.textContent      = totalQty;
+    if (totalAmountSpan)   totalAmountSpan.textContent   = 'PKR ' + totalAmount.toFixed(2);
+    if (totalAmountHidden) totalAmountHidden.value       = totalAmount.toFixed(2);
+  }
+
+  const observer = new MutationObserver(updateStockSummary);
+  observer.observe(tableBody, { childList: true, subtree: false });
+
+  // initial summary
+  updateStockSummary();
+});
+</script>
+
+
+
+{% if invoice_id %}
+<script>
+    setTimeout(function () {
+        window.open("{% url 'PrintInvoice' invoice_id %}", "_blank");
+    }, 1000);   // 1000 ms = 1 second
+</script>
+{% endif %}
+
+
+{% endblock %}

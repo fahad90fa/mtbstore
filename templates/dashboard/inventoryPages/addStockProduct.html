@@ -1,0 +1,366 @@
+{% load static %}
+<!-- begin::Modal - New Target -->
+<div class="modal fade" id="kt_modal_addStockProduct" tabindex="-1" aria-hidden="true">
+  <!-- begin::Modal dialog -->
+  <div class="modal-dialog modal-dialog-centered mw-650px">
+    <!-- begin::Modal content -->
+    <div class="modal-content rounded">
+      <!-- begin::Modal header -->
+      <div class="modal-header pb-0 border-0 justify-content-end">
+        <!-- begin::Close -->
+        <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+          <i class="ki-duotone ki-cross fs-1">
+            <span class="path1"></span>
+            <span class="path2"></span>
+          </i>
+        </div>
+        <!-- end::Close -->
+      </div>
+      <!-- begin::Modal header -->
+      <!-- begin::Modal body -->
+      <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
+        <!-- begin:Form -->
+        <form id="kt_modal_new_target_form" class="form">
+          <!-- begin::Heading -->
+          <div class="mb-13 text-center">
+            <!-- begin::Title -->
+            <h1 class="mb-3">Collect Stock Product</h1>
+            <!-- end::Title -->
+            <!-- begin::Description -->
+            <div class="text-muted fw-semibold fs-5">The products you add here will be saved temporarily until the stock is finalized.</div>
+            <!-- end::Description -->
+          </div>
+          <!-- end::Heading -->
+          <!-- begin::Input group -->
+          <div class="d-flex flex-column mb-8">
+            <label class="fs-6 fw-semibold mb-2">Select a Template</label>
+            <!-- begin::Select -->
+            <select name="type" aria-label="Select..." data-control="select" data-placeholder="Select..." class="form-select form-select">
+              {% for i in templates %}
+                <option value="{{ i.tem_id }}">{{ i.template_name }}</option>
+              {% endfor %}
+            </select>
+            <!-- end::Select -->
+          </div>
+
+          <!-- end::Input group -->
+
+          <!-- begin::Input group -->
+          <div class="d-flex flex-column mb-8 fv-row">
+            <!-- begin::Label -->
+            <label class="d-flex align-items-center fs-6 fw-semibold mb-2">
+              <span class="required">Product Name</span>
+              <span class="ms-1" data-bs-toggle="tooltip" title="Keep it short (1â€“2 words) for a professional look.">
+                <i class="ki-duotone ki-information-5 text-gray-500 fs-6">
+                  <span class="path1"></span>
+                  <span class="path2"></span>
+                  <span class="path3"></span>
+                </i>
+              </span>
+            </label>
+            <!-- end::Label -->
+            <input type="text" class="form-control form-control" placeholder="Enter Product Name" maxlength="25" name="title" required />
+          </div>
+          <!-- end::Input group -->
+
+       
+            <!-- begin::Card body -->
+            <div class="card-body pt-0">
+              <!-- begin::Stock -->
+              <div class="d-flex flex-wrap gap-5">
+                <!-- begin::Input group -->
+                <div class="fv-row w-100 flex-md-root">
+                  <!-- begin::Label -->
+                  <label class="required form-label">Quantity</label>
+                  <!-- end::Label -->
+                  <!-- begin::Input -->
+                  <input type="number" class="form-control mb-2" name="qty_product" placeholder="Enter quantity" value="" required />
+                  <!-- end::Input -->
+                </div>
+                <!-- end::Input group -->
+                <!-- begin::Input group -->
+                <div class="fv-row w-100 flex-md-root">
+                  <!-- begin::Label -->
+                  <label class="required form-label">Base Price</label>
+                  <!-- end::Label -->
+                  <!-- begin::Input -->
+                  <input type="number" class="form-control mb-2" name="base_price_pre" step="0.01" placeholder="Product price" value="" />
+                  <!-- end::Input -->
+                </div>
+                <!-- end::Input group -->
+              </div>
+              <!-- end:Stock -->
+               <br>
+              <!-- begin::Input group -->
+              <div class="fv-row mb-10">
+                <!-- begin::Label -->
+                <label class="fs-6 fw-semibold mb-2">
+                  Retail Price Calculator
+                  <span class="ms-1" data-bs-toggle="tooltip" title="Enter the base price above. If the retail price varies, select Positive or Negative and enter the percentage below, the final price will calculate automatically. To use the same price, select Fixed and leave the percentage field blank.">
+                    <i class="ki-duotone ki-information-5 text-gray-500 fs-6">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                      <span class="path3"></span>
+                    </i>
+                  </span>
+                </label>
+                <!-- End::Label -->
+                <!-- begin::Row -->
+                <div class="row row-cols-1 row-cols-md-3 row-cols-lg-1 row-cols-xl-3 g-9" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button='true']">
+                  <!-- begin::Col -->
+                  <div class="col">
+                    <!-- begin::Option -->
+                    <label class="btn btn-outline btn-outline-dashed btn-active-light-primary active d-flex text-start p-6" data-kt-button="true">
+                      <!-- begin::Radio -->
+                      <span class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1"><input class="form-check-input" type="radio" name="percentage" value="+" checked="checked" /></span>
+                      <!-- end::Radio -->
+                      <!-- begin::Info -->
+                      <span class="ms-5"><span class="fs-4 fw-bold text-gray-800 d-block">+VE</span></span>
+                      <!-- end::Info -->
+                    </label>
+                    <!-- end::Option -->
+                  </div>
+                  <!-- end::Col -->
+                  <!-- begin::Col -->
+                  <div class="col">
+                    <!-- begin::Option -->
+                    <label class="btn btn-outline btn-outline-dashed btn-active-light-primary d-flex text-start p-6" data-kt-button="true">
+                      <!-- begin::Radio -->
+                      <span class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1"><input class="form-check-input" type="radio" name="percentage" value="-" /></span>
+                      <!-- end::Radio -->
+                      <!-- begin::Info -->
+                      <span class="ms-5"><span class="fs-4 fw-bold text-gray-800 d-block">-VE</span></span>
+                      <!-- end::Info -->
+                    </label>
+                    <!-- end::Option -->
+                  </div>
+                  <!-- end::Col -->
+                  <!-- begin::Col -->
+                  <div class="col">
+                    <!-- begin::Option -->
+                    <label class="btn btn-outline btn-outline-dashed btn-active-light-primary d-flex text-start p-6" data-kt-button="true">
+                      <!-- begin::Radio -->
+                      <span class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1"><input class="form-check-input" type="radio" name="percentage" value="fixed" /></span>
+                      <!-- end::Radio -->
+                      <!-- begin::Info -->
+                      <span class="ms-5"><span class="fs-4 fw-bold text-gray-800 d-block">Fixed</span></span>
+                      <!-- end::Info -->
+                    </label>
+                    <!-- end::Option -->
+                  </div>
+                  <!-- end::Col -->
+                </div>
+                <!-- end::Row -->
+              </div>
+              <!-- end::Input group -->
+               <!-- begin::Stock -->
+              <div class="d-flex flex-wrap gap-5">
+                <!-- begin::Input group -->
+                <div class="fv-row w-100 flex-md-root">
+                  <!-- begin::Label -->
+                  <label class="required form-label">Set Percentage</label>
+                  <!-- end::Label -->
+                  <!-- begin::Input -->
+                  <input type="number" class="form-control mb-2" name="base_price_percentage" placeholder="00 %" value="" />
+                  <!-- end::Input -->
+                </div>
+                <!-- end::Input group -->
+                <!-- begin::Input group -->
+                <div class="fv-row w-100 flex-md-root">
+                  <!-- begin::Label -->
+                  <label class="required form-label">Retail Price</label>
+                  <!-- end::Label -->
+                  <!-- begin::Input -->
+                  <input type="number" class="form-control mb-2" name="base_price" step="0.01" placeholder="Retail price" value="" />
+                  <!-- end::Input -->
+                </div>
+                <!-- end::Input group -->
+                <!-- begin::Input group -->
+                <div class="fv-row w-100 flex-md-root">
+                  <!-- begin::Label -->
+                  <label class="required form-label">Total</label>
+                  <!-- end::Label -->
+                  <!-- begin::Input -->
+                  <input type="number" class="form-control mb-2" name="amount" step="0.01" placeholder="Total Amount" value="" />
+                  <!-- end::Input -->
+                </div>
+                <!-- end::Input group -->
+              </div>
+              <!-- end:Stock -->
+               <br>
+            </div>
+            <!-- end::Card header -->
+
+          <!-- begin::Actions -->
+          <div class="text-center">
+            <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3" data-bs-dismiss="modal">Reset</button>
+            <button type="submit" class="btn btn-primary">
+              <span class="indicator-label">Add</span>
+              <span class="indicator-progress">
+                Please wait...
+                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+              </span>
+            </button>
+          </div>
+          <!-- end::Actions -->
+        </form>
+        <!-- end:Form -->
+      </div>
+      <!-- end::Modal body -->
+    </div>
+    <!-- end::Modal content -->
+  </div>
+  <!-- end::Modal dialog -->
+</div>
+<!-- end::Modal - New Target -->
+
+<script>
+(() => {
+  function initStockModalCalc(modalEl) {
+    if (!modalEl || modalEl.dataset.calcInit === "1") return;
+    modalEl.dataset.calcInit = "1";
+
+    const form = modalEl.querySelector("#kt_modal_new_target_form");
+    if (!form) return;
+
+    const qtyInput  = form.querySelector('[name="qty_product"]');
+    const baseInput = form.querySelector('[name="base_price_pre"]');
+    const percInput = form.querySelector('[name="base_price_percentage"]');
+    const retailInp = form.querySelector('[name="base_price"]');
+    const totalInp  = form.querySelector('[name="amount"]');
+
+    // FIX 1 (backup): force step for decimals even if HTML wasn’t updated
+    [baseInput, percInput, retailInp, totalInp].forEach(inp => {
+      if (!inp) return;
+      if (!inp.getAttribute("step")) inp.setAttribute("step", "0.01");
+    });
+
+    function n(v) {
+      const x = parseFloat(String(v ?? "").replace(",", "."));
+      return Number.isFinite(x) ? x : NaN;
+    }
+
+    function getType() {
+      const checked = form.querySelector('input[name="percentage"]:checked');
+      return checked ? checked.value : "fixed";
+    }
+
+    function calc({ source = "" } = {}) {
+      const qty  = n(qtyInput?.value);
+      const base = n(baseInput?.value);
+      const perc = n(percInput?.value);
+      const type = getType();
+
+      if (source === "retail") {
+        const unit = n(retailInp?.value);
+        if (!Number.isFinite(qty) || !Number.isFinite(unit) || qty <= 0) {
+          totalInp.value = "";
+          return;
+        }
+        totalInp.value = (unit * qty).toFixed(2);
+        return;
+      }
+
+      if (!Number.isFinite(qty) || qty <= 0 || !Number.isFinite(base) || base <= 0) {
+        retailInp.value = "";
+        totalInp.value  = "";
+        return;
+      }
+
+      let unit = base;
+      if (type === "+" && Number.isFinite(perc) && perc !== 0) unit = base + (base * perc / 100);
+      else if (type === "-" && Number.isFinite(perc) && perc !== 0) unit = base - (base * perc / 100);
+      else if (type === "fixed") unit = base;
+
+      retailInp.value = unit.toFixed(2);
+      totalInp.value  = (unit * qty).toFixed(2);
+    }
+
+    form.addEventListener("input", (e) => {
+      if (e.target && e.target.matches('[name="base_price"]')) calc({ source: "retail" });
+      else calc({ source: "auto" });
+    }, true);
+
+    form.addEventListener("change", () => calc({ source: "auto" }), true);
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      calc({ source: "auto" });
+
+      const qty    = n(qtyInput.value);
+      const retail = n(retailInp.value);
+      const total  = n(totalInp.value);
+
+      if (!Number.isFinite(qty) || qty <= 0 || !Number.isFinite(retail) || retail <= 0 || !Number.isFinite(total) || total <= 0) {
+        alert("Calculator not completed.");
+        return;
+      }
+
+      const tableBody = document.querySelector("#stockTable tbody");
+      if (!tableBody) {
+        alert("Table #stockTable not found.");
+        return;
+      }
+
+      const templateSelect = form.querySelector('[name="type"]');
+      const templateId = templateSelect ? templateSelect.value : "";
+      const name = (form.querySelector('[name="title"]')?.value || "").trim();
+
+      const tr = document.createElement("tr");
+      // 🔥 STORE DATA FOR FINAL SUBMIT
+      const qtyVal   = n(qtyInput.value);
+      const baseVal  = n(baseInput.value);
+      const percVal  = n(percInput.value);
+      const typeVal  = getType();
+      const retailVal = n(retailInp.value);
+      const totalVal  = n(totalInp.value);
+
+      // 🔒 store FINAL values (single source of truth)
+      tr.dataset.basePricePre     = Number.isFinite(baseVal)   ? baseVal.toFixed(2)   : "0";
+      tr.dataset.percentageValue = Number.isFinite(percVal)   ? percVal              : "";
+      tr.dataset.percentageType  = typeVal;
+      tr.dataset.retailPrice     = Number.isFinite(retailVal) ? retailVal.toFixed(2) : "0";
+      tr.dataset.totalAmount     = Number.isFinite(totalVal)  ? totalVal.toFixed(2)  : "0";
+      tr.innerHTML = `
+        <td class="ps-9">${templateId}</td>
+        <td>${qty} / ${retail.toFixed(2)}</td>
+        <td>${name}</td>
+        <td class="text-success">PKR ${total.toFixed(2)}</td>
+        <td class="text-center">
+          <button type="button" class="btn btn-light btn-sm">Delete</button>
+        </td>
+      `;
+      tr.querySelector("button").addEventListener("click", () => tr.remove());
+      tableBody.appendChild(tr);
+
+      form.reset();
+      retailInp.value = "";
+      totalInp.value  = "";
+
+      // FIX 2: auto-close modal after add
+      const instance = (window.bootstrap && window.bootstrap.Modal)
+        ? window.bootstrap.Modal.getOrCreateInstance(modalEl)
+        : null;
+
+      if (instance) instance.hide();
+      else {
+        // fallback if bootstrap isn't exposed (rare)
+        modalEl.classList.remove("show");
+        modalEl.setAttribute("aria-hidden", "true");
+        modalEl.style.display = "none";
+        document.body.classList.remove("modal-open");
+        document.querySelectorAll(".modal-backdrop").forEach(b => b.remove());
+      }
+    });
+
+    calc({ source: "auto" });
+  }
+
+  document.addEventListener("shown.bs.modal", (e) => {
+    if (e.target && e.target.id === "kt_modal_addStockProduct") initStockModalCalc(e.target);
+  });
+
+  const existing = document.getElementById("kt_modal_addStockProduct");
+  if (existing) initStockModalCalc(existing);
+})();
+</script>

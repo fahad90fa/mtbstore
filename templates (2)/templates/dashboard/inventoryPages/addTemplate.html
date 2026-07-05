@@ -1,0 +1,511 @@
+{% load static %}
+<!-- begin::Modal - Create Template -->
+<div class="modal fade" id="kt_modal_create_app" tabindex="-1" aria-hidden="true">
+  <!-- begin::Modal dialog -->
+  <div class="modal-dialog modal-dialog-centered mw-1000px">
+    <!-- begin::Modal content -->
+    <div class="modal-content">
+      <!-- begin::Modal header -->
+      <div class="modal-header">
+        <!-- begin::Modal title -->
+        <h2>Create Template</h2>
+        <!-- end::Modal title -->
+        <!-- begin::Close -->
+        <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+          <i class="ki-duotone ki-cross fs-1">
+            <span class="path1"></span>
+            <span class="path2"></span>
+          </i>
+        </div>
+        <!-- end::Close -->
+      </div>
+      <!-- end::Modal header -->
+      <!-- begin::Modal body -->
+      <div class="modal-body py-lg-10 px-lg-10">
+        <!-- begin::Stepper -->
+        <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid">
+          <!-- begin::Aside -->
+          <div class="d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px">
+            <!-- begin::Nav -->
+            <div class="stepper-nav ps-lg-10">
+              <!-- begin::Step 1 -->
+              <div class="stepper-item completed" id="step-1">
+                <!-- begin::Wrapper -->
+                <div class="stepper-wrapper">
+                  <!-- begin::Icon -->
+                  <div class="stepper-icon w-40px h-40px">
+                    <i class="ki-duotone ki-check stepper-check fs-2"></i>
+                    <span class="stepper-number">1</span>
+                  </div>
+                  <!-- end::Icon -->
+                  <!-- begin::Label -->
+                  <div class="stepper-label">
+                    <h3 class="stepper-title">Details</h3>
+                    <div class="stepper-desc">Name your App</div>
+                  </div>
+                  <!-- end::Label -->
+                </div>
+                <!-- end::Wrapper -->
+                <!-- begin::Line -->
+                <div class="stepper-line h-40px"></div>
+                <!-- end::Line -->
+              </div>
+              <!-- end::Step 1 -->
+              <!-- begin::Step 2 -->
+              <div class="stepper-item current" id="step-1">
+                <!-- begin::Wrapper -->
+                <div class="stepper-wrapper">
+                  <!-- begin::Icon -->
+                  <div class="stepper-icon w-40px h-40px">
+                    <i class="ki-duotone ki-check stepper-check fs-2"></i>
+                    <span class="stepper-number">2</span>
+                  </div>
+                  <!-- end::Icon -->
+                  <!-- begin::Label -->
+                  <div class="stepper-label">
+                    <h3 class="stepper-title">Completed</h3>
+                    <div class="stepper-desc">Review and Submit</div>
+                  </div>
+                  <!-- end::Label -->
+                </div>
+                <!-- end::Wrapper -->
+              </div>
+              <!-- end::Step 2 -->
+            </div>
+            <!-- end::Nav -->
+          </div>
+          <!-- begin::Aside -->
+          <!-- begin::Content -->
+          <div class="flex-row-fluid py-lg-5 px-lg-15">
+            <!-- begin::Form -->
+            <form class="form" method="post" action="/inventory/templates/add-template/" id="kt_modal_create_app_form">
+				{% csrf_token %}
+              <!-- begin::Step 1 -->
+              <div id="step-1-content">
+                <div class="w-100">
+                  <!-- begin::Input group -->
+                  <div class="fv-row mb-10">
+                    <!-- begin::Label -->
+                    <label class="d-flex align-items-center fs-5 fw-semibold mb-2">
+                      <span class="required">Template Name</span>
+                      <span class="ms-1" data-bs-toggle="tooltip" title="Specify your unique template name">
+                        <i class="ki-duotone ki-information-5 text-gray-500 fs-6">
+                          <span class="path1"></span>
+                          <span class="path2"></span>
+                          <span class="path3"></span>
+                        </i>
+                      </span>
+                    </label>
+                    <!-- end::Label -->
+                    <!-- begin::Input -->
+                    <input type="text" class="form-control form-control-lg form-control-solid" name="template_name" placeholder="" value="" maxlength="20" required />
+                    <!-- end::Input -->
+                  </div>
+                  <!-- end::Input group -->
+                  <!-- begin::Input group -->
+                  <div class="fv-row">
+                    <!-- begin::Label -->
+                    <label class="d-flex align-items-center fs-5 fw-semibold mb-4">
+                      <span class="required">Colors</span>
+                      <span class="ms-1" data-bs-toggle="tooltip" title="Select your template background color">
+                        <i class="ki-duotone ki-information-5 text-gray-500 fs-6">
+                          <span class="path1"></span>
+                          <span class="path2"></span>
+                          <span class="path3"></span>
+                        </i>
+                      </span>
+                    </label>
+                    <!-- end::Label -->
+                    <!-- begin:Options -->
+                    <div class="fv-row">
+                      <!-- begin:Option -->
+                      <label class="d-flex flex-stack mb-5 cursor-pointer">
+                        <!-- begin:Label -->
+                        <span class="d-flex align-items-center me-2">
+                          <!-- begin:Icon -->
+                          <span class="symbol symbol-50px me-6"><span class="symbol-label bg-info"></span></span>
+                          <!-- end:Icon -->
+                          <!-- begin:Info -->
+                          <span class="d-flex flex-column"><span class="fw-bold fs-6">Blue-Violet (#7239ea)</span></span>
+                          <!-- end:Info -->
+                        </span>
+                        <!-- end:Label -->
+                        <!-- begin:Input -->
+                        <span class="form-check form-check-custom form-check-solid"><input class="form-check-input" type="radio" name="color" value="bg-info" /></span>
+                        <!-- end:Input -->
+                      </label>
+                      <!-- end::Option -->
+                      <!-- begin:Option -->
+                      <label class="d-flex flex-stack mb-5 cursor-pointer">
+                        <!-- begin:Label -->
+                        <span class="d-flex align-items-center me-2">
+                          <!-- begin:Icon -->
+                          <span class="symbol symbol-50px me-6"><span class="symbol-label bg-success"></span></span>
+                          <!-- end:Icon -->
+                          <!-- begin:Info -->
+                          <span class="d-flex flex-column"><span class="fw-bold fs-6">Dodger Blue (#1b84ff)</span></span>
+                          <!-- end:Info -->
+                        </span>
+                        <!-- end:Label -->
+                        <!-- begin:Input -->
+                        <span class="form-check form-check-custom form-check-solid"><input class="form-check-input" type="radio" name="color" value="bg-success" /></span>
+                        <!-- end:Input -->
+                      </label>
+                      <!-- end::Option -->
+                      <!-- begin:Option -->
+                      <label class="d-flex flex-stack mb-5 cursor-pointer">
+                        <!-- begin:Label -->
+                        <span class="d-flex align-items-center me-2">
+                          <!-- begin:Icon -->
+                          <span class="symbol symbol-50px me-6"><span class="symbol-label bg-danger"></span></span>
+                          <!-- end:Icon -->
+                          <!-- begin:Info -->
+                          <span class="d-flex flex-column"><span class="fw-bold fs-6">Awesome (#f8285a)</span></span>
+                          <!-- end:Info -->
+                        </span>
+                        <!-- end:Label -->
+                        <!-- begin:Input -->
+                        <span class="form-check form-check-custom form-check-solid"><input class="form-check-input" type="radio" name="color" value="bg-danger" /></span>
+                        <!-- end:Input -->
+                      </label>
+                      <!-- end::Option -->
+                      <!-- begin:Option -->
+                      <label class="d-flex flex-stack mb-5 cursor-pointer">
+                        <!-- begin:Label -->
+                        <span class="d-flex align-items-center me-2">
+                          <!-- begin:Icon -->
+                          <span class="symbol symbol-50px me-6"><span class="symbol-label bg-primary"></span></span>
+                          <!-- end:Icon -->
+                          <!-- begin:Info -->
+                          <span class="d-flex flex-column"><span class="fw-bold fs-6">Malachite (#17c653)</span></span>
+                          <!-- end:Info -->
+                        </span>
+                        <!-- end:Label -->
+                        <!-- begin:Input -->
+                        <span class="form-check form-check-custom form-check-solid"><input class="form-check-input" type="radio" name="color" value="bg-primary" /></span>
+                        <!-- end:Input -->
+                      </label>
+                      <!-- end::Option -->
+                      <!-- begin:Option -->
+                      <label class="d-flex flex-stack mb-5 cursor-pointer">
+                        <!-- begin:Label -->
+                        <span class="d-flex align-items-center me-2">
+                          <!-- begin:Icon -->
+                          <span class="symbol symbol-50px me-6"><span class="symbol-label bg-warning"></span></span>
+                          <!-- end:Icon -->
+                          <!-- begin:Info -->
+                          <span class="d-flex flex-column"><span class="fw-bold fs-6">Golden Poppy (#f6c000)</span></span>
+                          <!-- end:Info -->
+                        </span>
+                        <!-- end:Label -->
+                        <!-- begin:Input -->
+                        <span class="form-check form-check-custom form-check-solid"><input class="form-check-input" type="radio" name="color" value="bg-warning" /></span>
+                        <!-- end:Input -->
+                      </label>
+                      <!-- end::Option -->
+                      <!-- begin:Option -->
+                      <label class="d-flex flex-stack mb-5 cursor-pointer">
+                        <!-- begin:Label -->
+                        <span class="d-flex align-items-center me-2">
+                          <!-- begin:Icon -->
+                          <span class="symbol symbol-50px me-6"><span class="symbol-label bg-dark"></span></span>
+                          <!-- end:Icon -->
+                          <!-- begin:Info -->
+                          <span class="d-flex flex-column"><span class="fw-bold fs-6">Dark Gunmetal (#1e2129)</span></span>
+                          <!-- end:Info -->
+                        </span>
+                        <!-- end:Label -->
+                        <!-- begin:Input -->
+                        <span class="form-check form-check-custom form-check-solid"><input class="form-check-input" type="radio" name="color" value="bg-dark" /></span>
+                        <!-- end:Input -->
+                      </label>
+                      <!-- end::Option -->
+                    </div>
+                    <!-- end:Options -->
+                  </div>
+                  <!-- end::Input group -->
+                </div>
+              </div>
+              <!-- end::Step 1 -->
+              <!-- begin::Step 2 -->
+              <div id="step-2-content">
+                <div class="w-100">
+                  <!-- begin::Card body -->
+                  <div class="card-body pt-0">
+                    <!-- begin::Custom fields -->
+                    <div class="d-flex flex-column mb-15 fv-row">
+                      <!-- begin::Label -->
+                      <div class="fs-5 fw-bold form-label mb-3">
+                        Custom fields
+                        <span class="ms-2 cursor-pointer" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-html="true" data-bs-content="Add key value pairs">
+                          <i class="ki-duotone ki-information fs-7">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                            <span class="path3"></span>
+                          </i>
+                        </span>
+                      </div>
+                      <!-- end::Label -->
+                      <!-- begin::Table wrapper -->
+                      <div class="table-responsive">
+                        <!-- begin::Table -->
+                        <table id="kt_create_new_custom_fields" class="table align-middle table-row-dashed fw-semibold fs-6 gy-5">
+                          <!-- begin::Table head -->
+                          <thead>
+                            <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                              <th class="pt-0">Field Name</th>
+                              <th class="pt-0">Field Type</th>
+                              <th class="pt-0">Is Required</th>
+                              <th class="pt-0">Default Value</th>
+                              <th class="pt-0 text-end">Remove</th>
+                            </tr>
+                          </thead>
+                          <!-- end::Table head -->
+                          <!-- begin::Table body -->
+                          <tbody id="custom-fields-body">
+                            <tr>
+                              <td>
+                                <input type="text" class="form-control form-control-solid" name="field_name[]" required />
+                              </td>
+                              <td>
+                                <select class="form-select form-select-solid" name="field_type[]" required>
+                                  <option value="text">Text</option>
+                                  <option value="number">Number</option>
+                                  <option value="date">Date</option>
+                                </select>
+                              </td>
+
+                              <td>
+                                <select class="form-select form-select-solid" name="is_required[]" required>
+                                  <option value="True">True</option>
+                                  <option value="False">False</option>
+                                </select>
+                              </td>
+
+                              <td>
+                                <input type="text" class="form-control form-control-solid" name="default_value[]" />
+                              </td>
+                              <td class="text-end">
+                                <button type="button" class="btn btn-icon btn-flex btn-active-light-primary w-30px h-30px me-3" onclick="this.closest('tr').remove()" data-kt-action="field_remove">
+                                  <i class="ki-duotone ki-trash fs-3">
+                                    <span class="path1"></span>
+                                    <span class="path2"></span>
+                                    <span class="path3"></span>
+                                    <span class="path4"></span>
+                                    <span class="path5"></span>
+                                  </i>
+                                </button>
+                              </td>
+                            </tr>
+                          </tbody>
+                          <!-- end::Table body -->
+                        </table>
+                        <!-- end:Table -->
+                      </div>
+                      <!-- end::Table wrapper -->
+                      <!-- begin::Add custom field -->
+                      <button type="button" class="btn btn-light-primary me-auto" id="kt_create_new_custom_fields_add">Add custom field</button>
+                      <!-- end::Add custom field -->
+                    </div>
+                    <!-- end::Custom fields -->
+                  </div>
+                  <!-- end::Card body -->
+                </div>
+              </div>
+              <!-- end::Step 2 -->
+              <!-- begin::Actions -->
+              <div class="d-flex flex-stack pt-10">
+                <!-- begin::Wrapper -->
+                <div class="me-2">
+                  <button type="button" class="btn btn-lg btn-light-primary me-3" id="previous">
+                    <i class="ki-duotone ki-arrow-left fs-3 me-1">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                    </i>Back
+                  </button>
+                </div>
+                <!-- end::Wrapper -->
+                <!-- begin::Wrapper -->
+                <div>
+                  <button type="submit" class="btn btn-lg btn-primary" id="submit">
+                    <span class="indicator-label">
+                      Submit
+                      <i class="ki-duotone ki-arrow-right fs-3 ms-2 me-0">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                      </i>
+                    </span>
+                    <span class="indicator-progress">
+                      Please wait...
+                      <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                  </button>
+                  <button type="button" class="btn btn-lg btn-primary" id="next">
+                    Continue
+                    <i class="ki-duotone ki-arrow-right fs-3 ms-1 me-0">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                    </i>
+                  </button>
+                </div>
+                <!-- end::Wrapper -->
+              </div>
+              <!-- end::Actions -->
+            </form>
+            <!-- end::Form -->
+          </div>
+          <!-- end::Content -->
+        </div>
+        <!-- end::Stepper -->
+      </div>
+      <!-- end::Modal body -->
+    </div>
+    <!-- end::Modal content -->
+  </div>
+  <!-- end::Modal dialog -->
+</div>
+<!-- end::Modal - Create Template -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const totalSteps = 2 // Update this if you add more steps
+    let currentStep = 1
+  
+    const form = document.getElementById('kt_modal_create_app_form')
+  
+    const updateStepper = () => {
+        for (let i = 1; i <= totalSteps; i++) {
+            const stepHeader = document.getElementById(`step-${i}`)
+            const stepContent = document.getElementById(`step-${i}-content`)
+    
+            if (stepHeader) {
+                stepHeader.classList.remove('current', 'completed')
+                if (i < currentStep) {
+                    stepHeader.classList.add('completed')
+                } else if (i === currentStep) {
+                    stepHeader.classList.add('current')
+                }
+            }
+    
+            if (stepContent) {
+                stepContent.style.display = i === currentStep ? 'block' : 'none'
+            }
+        }
+    
+        // Button visibility
+        document.getElementById('previous').style.display = currentStep === 1 ? 'none' : 'inline-block'
+        document.getElementById('next').style.display = currentStep === totalSteps ? 'none' : 'inline-block'
+        document.getElementById('submit').style.display = currentStep === totalSteps ? 'inline-block' : 'none'
+    }
+  
+    const validateCurrentStep = () => {
+        const currentContent = document.getElementById(`step-${currentStep}-content`)
+        // Get all required inputs except default_value[]
+        const inputs = currentContent.querySelectorAll(`
+            input[required]:not([name="default_value[]"]),
+            input:not([type='radio']):not([name="default_value[]"]),
+            select[required],
+            textarea[required]
+        `)
+    
+        let valid = true
+        inputs.forEach((input) => {
+            if (!input.checkValidity()) {
+                input.classList.add('is-invalid')
+                valid = false
+            } else {
+                input.classList.remove('is-invalid')
+            }
+        })
+    
+        // Special handling for required radio groups (excluding any you want to skip)
+        const radioGroups = new Set()
+        currentContent.querySelectorAll('input[type="radio"][required]').forEach((radio) => {
+            if (!radio.name.includes('default_value')) { // Skip if name contains default_value
+                radioGroups.add(radio.name)
+            }
+        })
+    
+        radioGroups.forEach((groupName) => {
+            const radios = currentContent.querySelectorAll(`input[name="${groupName}"]`)
+            const oneChecked = Array.from(radios).some((r) => r.checked)
+            if (!oneChecked) {
+                radios.forEach((r) => r.classList.add('is-invalid'))
+                valid = false
+            } else {
+                radios.forEach((r) => r.classList.remove('is-invalid'))
+            }
+        })
+    
+        return valid
+    }
+  
+    // Continue button
+    document.getElementById('next').addEventListener('click', () => {
+        if (validateCurrentStep() && currentStep < totalSteps) {
+            currentStep++
+            updateStepper()
+        }
+    })
+  
+    // Back button
+    document.getElementById('previous').addEventListener('click', () => {
+        if (currentStep > 1) {
+            currentStep--
+            updateStepper()
+        }
+    })
+  
+    // Submit button
+    document.getElementById('submit').addEventListener('click', () => {
+        if (validateCurrentStep()) {
+            form.submit() // Real submission
+        }
+    })
+  
+    updateStepper() // Initial load
+})
+</script>
+<script>
+  document.getElementById('kt_create_new_custom_fields_add').addEventListener('click', function () {
+    const tbody = document.getElementById('custom-fields-body')
+    const row = document.createElement('tr')
+  
+    row.innerHTML = `
+            <td>
+                <input type="text" class="form-control form-control-solid" name="field_name[]" required />
+            </td>
+      		<td>
+                <select class="form-select form-select-solid" name="field_type[]" required>
+                    <option value="text">Text</option>
+                    <option value="number">Number</option>
+                    <option value="date">Date</option>
+                </select>
+            </td>
+
+            <td>
+                <select class="form-select form-select-solid" name="is_required[]" required>
+                    <option value="True">True</option>
+                    <option value="False">False</option>
+                </select>
+            </td>
+            <td>
+      			<input type="text" class="form-control form-control-solid" name="default_value[]" />
+      		</td>
+      		<td class="text-end">
+      			<button type="button" class="btn btn-icon btn-flex btn-active-light-primary w-30px h-30px me-3" onclick="this.closest('tr').remove()" data-kt-action="field_remove">
+      				<i class="ki-duotone ki-trash fs-3">
+      					<span class="path1"></span>
+      					<span class="path2"></span>
+      					<span class="path3"></span>
+      					<span class="path4"></span>
+      					<span class="path5"></span>
+      				</i>
+      			</button>
+      		</td>
+             
+          `
+  
+    tbody.appendChild(row)
+  })
+</script>

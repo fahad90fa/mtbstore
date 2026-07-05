@@ -1,0 +1,184 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+{% block title %}Sign In | MT&B House{% endblock %}
+{% block extraStyle %}
+<style>
+	#loginType option {
+		border: none;
+		border-radius: 5px;
+		padding: 10px;
+		background-color: #f0f0f0;
+		box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		transition: background-color 0.3s;
+	}
+
+	#loginType option:focus {
+		background-color: #e0e0e0;
+		outline: none;
+	}
+</style>
+{% endblock %}
+{% block bodyContent %}
+<!--begin::Root-->
+		<div class="d-flex flex-column flex-root" id="page">
+			<!--begin::Page bg image-->
+			<style>body { background-image: url('{% static "assets/media/auth/bg10.jpeg" %}'); } [data-bs-theme="dark"] body { background-image: url('{% static "assets/media/auth/bg10-dark.jpeg" %}'); }</style>
+			<!--end::Page bg image-->
+			<!--begin::Authentication - Sign-in -->
+			<div class="d-flex flex-column flex-lg-row flex-column-fluid">
+				<!--begin::Aside-->
+				<div class="d-flex flex-lg-row-fluid">
+					<!--begin::Content-->
+					<div class="d-flex flex-column flex-center pb-0 pb-lg-10 p-10 w-100">
+						<!--begin::Image-->
+						<img class="theme-light-show mx-auto mw-100 w-150px w-lg-400px mb-10 mb-lg-20" src="{% static 'assets/media/auth/login.png' %}" alt="" />
+                        <img class="theme-dark-show mx-auto mw-100 w-150px w-lg-300px mb-10 mb-lg-20" src="{% static 'assets/media/auth/agency-dark.png' %}" alt="" />
+						<!--end::Image-->
+						<!--begin::Title-->
+                        <h1 class="text-gray-800 fs-2qx fw-bold text-center mb-7">Welcome Back to MT&B House</h1>
+                        <!--end::Title-->
+
+                        <!--begin::Text-->
+                        <div class="text-gray-600 fs-base text-center fw-semibold">
+                        Manage your inventory, sales, and billing efficiently.
+                        <br />Log in to access your dashboard and keep your business rolling.
+                        </div>
+                        <!--end::Text-->
+
+					</div>
+					<!--end::Content-->
+				</div>
+				<!--begin::Aside-->
+				<!--begin::Body-->
+				<div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12">
+					<!--begin::Wrapper-->
+					<div class="bg-body d-flex flex-column flex-center rounded-4 w-md-600px p-10">
+						<!--begin::Content-->
+						<div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-400px">
+							<!--begin::Wrapper-->
+							<div class="d-flex flex-center flex-column flex-column-fluid pb-15 pb-lg-20">
+								<!--begin::Form-->
+								<form method="POST" hx-post="{% url 'Signin' %}" hx-target="#page" hx-swap="innerHTML" class="form w-100" id="submit-form">
+                                    {% csrf_token %}
+									<input type="hidden" name="choice" value="email">
+									<!--begin::Heading-->
+									<div class="text-center mb-11">
+										<!--begin::Title-->
+										<h1 class="text-gray-900 fw-bolder mb-3">Sign In </h1>
+										<!--end::Title-->
+										<!--begin::Subtitle-->
+										<div class="text-gray-500 fw-semibold fs-6">Access your <a href="/">MT&B House </a> Portal</div>
+										<!--end::Subtitle=-->
+									</div>
+									<!--begin::Heading-->
+								<div class="separator separator-content my-14">
+									<select
+										id="loginType"
+										class="form-select form-select-sm w-150px text-center fw-semibold fs-7 text-gray-600 border-0 bg-transparent"
+										onchange="updateLoginField(); updateLoginLabel();"
+									>
+										<option value="email" selected>Email login</option>
+										<option value="phone">Phone login</option>
+										<option value="cnic">CNIC login</option>
+									</select>
+								</div>
+
+									<!--begin::Input group=-->
+									<div class="fv-row mb-8">
+										<!--begin::Email-->
+										<input type="email" id="loginInput" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" required/>
+										<!--end::Email-->
+									</div>
+									<!--end::Input group=-->
+									<div class="fv-row mb-3">
+										<!--begin::Password-->
+										<input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent" required />
+										<!--end::Password-->
+									</div>
+									<!--end::Input group=-->
+                                    {% if error %}
+                                    <div id="loginError" class="mt-2" style="color:red;">{{ error }}</div>
+                                    {% endif %}
+									<!--begin::Wrapper-->
+									<div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
+										<div></div>
+										<!--begin::Link-->
+										<a href="#" class="link-primary" onclick="alert('Oops! Password resets are admin-controlled.\nPlease reach out to the admin to get it sorted.')">Forgot Password ?</a>
+										<!--end::Link-->
+									</div>
+									<!--end::Wrapper-->
+									<!--begin::Submit button-->
+									<div class="d-grid mb-10">
+										<button type="submit" id="submit-btn" class="btn btn-primary">
+											<span class="indicator-label"> Sign In</span>
+										</button>
+									</div>
+									<!--end::Submit button-->
+									<!--begin::Sign up-->
+									<div class="text-gray-500 text-center fw-semibold fs-6">Not a Member yet? 
+									<a href="#" hx-get="{% url 'Signup' %}" hx-target="#page" hx-swap="innerHTML"  hx-push-url="/accounts/signup/" class="link-primary">Sign up</a></div>
+									<!--end::Sign up-->
+								</form>
+								<!--end::Form-->
+							</div>
+							<!--end::Wrapper-->
+							<!--begin::Footer-->
+							<div class="d-flex flex-stack">
+								<!--begin::Languages-->
+								<div class="me-10">
+								</div>
+								<!--end::Languages-->
+								<!--begin::Links-->
+								<div class="d-flex fw-semibold text-primary fs-base gap-5">
+									<a href="/faq/" target="_blank">FAQ</a>
+									<a href="/about-us/" target="_blank">About</a>
+									<a href="/contact-us/" target="_blank">Contact Us</a>
+								</div>
+								<!--end::Links-->
+							</div>
+							<!--end::Footer-->
+						</div>
+						<!--end::Content-->
+					</div>
+					<!--end::Wrapper-->
+				</div>
+				<!--end::Body-->
+			</div>
+			<!--end::Authentication - Sign-in-->
+		</div>
+		<!--end::Root-->
+{% endblock %}
+{% block extraScript %}
+<script>
+function updateLoginField() {
+	const type = document.getElementById("loginType").value;
+	const input = document.getElementById("loginInput");
+	const choiceInput = document.querySelector('input[name="choice"]');
+
+	input.value = "";
+	input.removeAttribute("pattern");
+
+	if (type === "email") {
+		input.type = "email";
+		input.name = "email";
+		input.placeholder = "Email address";
+		choiceInput.value = "email";
+	}
+
+	if (type === "phone") {
+		input.type = "tel";
+		input.name = "phone";
+		input.placeholder = "Phone number (03XXXXXXXXX)";
+		choiceInput.value = "phone";
+	}
+
+	if (type === "cnic") {
+		input.type = "text";
+		input.name = "cnic";
+		input.placeholder = "CNIC (12345-1234567-1)";
+		choiceInput.value = "cnic";
+	}
+}
+</script>
+
+{% endblock %}

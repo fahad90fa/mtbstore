@@ -1,0 +1,101 @@
+<div class="modal fade" id="kt_modal_clientInvoicePopup" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered mw-600px">
+    <div class="modal-content rounded">
+      <div class="modal-header border-0 justify-content-end">
+        <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+          <i class="ki-duotone ki-cross fs-1">
+            <span class="path1"></span>
+            <span class="path2"></span>
+          </i>
+        </div>
+      </div>
+
+      <div class="modal-body px-10 pb-10">
+        <form method="post" action="{% url 'popup_add_product_to_invoice' %}">
+          {% csrf_token %}
+
+          <!-- product id from table -->
+          <input type="hidden" name="product_id" id="modal_context_id" />
+
+          <div class="mb-8 text-center">
+            <h2>Add Product to Invoice</h2>
+          </div>
+
+          <div class="mb-8">
+            <label class="form-label required">Select Draft Invoice</label>
+            <select name="draft_id" id="popup_draft_select" class="form-select form-select-solid" required>
+              <option value="" hidden>Loading drafts…</option>
+            </select>
+          </div>
+
+          <div class="mb-8">
+            <label class="form-label">Quantity</label>
+            <input type="number" name="quantity" value="1" min="1" class="form-control form-control-solid" />
+          </div>
+
+          <div class="text-center">
+            <button type="button" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</button>
+            <button class="btn btn-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#kt_modal_clientInvoicePopup"
+  data-context-id="{{ p.prod_id }}">
+  Add
+</button>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const modal = document.getElementById("kt_modal_clientInvoicePopup");
+  const draftSelect = modal.querySelector('select[name="draft_id"]');
+  const productInput = document.getElementById("modal_context_id");
+
+  // When popup opens
+  modal.addEventListener("show.bs.modal", async (event) => {
+
+    const trigger = event.relatedTarget;
+    const productId = trigger?.getAttribute("data-context-id") || "";
+
+    productInput.value = productId;
+
+    // reset dropdown
+    draftSelect.innerHTML = '<option value="" hidden>Choose invoice</option>';
+
+    try {
+      const res = await fetch("/api/invoice/popup/drafts/");
+      const data = await res.json();
+
+      if (!data.length) {
+        draftSelect.insertAdjacentHTML(
+          "beforeend",
+          `<option disabled>No draft invoices</option>`
+        );
+        return;
+      }
+
+      data.forEach(d => {
+        draftSelect.insertAdjacentHTML(
+          "beforeend",
+          `<option value="${d.draft_id}">
+            #${d.draft_id} (${d.items_count} items)
+          </option>`
+        );
+      });
+
+    } catch (err) {
+      console.error("Draft fetch failed", err);
+      draftSelect.insertAdjacentHTML(
+        "beforeend",
+        `<option disabled>Error loading drafts</option>`
+      );
+    }
+  });
+
+});
+</script>

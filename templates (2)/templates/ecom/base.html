@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta name="keywords" content="auto parts, car accessories, tires, batteries, brake discs, oil filters, car tools, automotive store, vehicle components, spare parts" />
+    <meta name="description" content="MT&B House offers high-quality automotive parts, tires, batteries, filters, tools, and accessories for all vehicle models." />
+    <meta name="author" content="MT&B House" />
+    <title>MT&B House – Tires, Batteries & Automotive Parts</title>
+
+    {% include "ecom/elements/style.html" %}
+  </head>
+  <body data-mn-mode="light">
+    <main class="wrapper sb-default">
+      <!-- Loader -->
+      <div id="mn-overlay">
+        <div class="loader">
+          <img alt="loader" src="{% static 'ecom/assets/img/logo/loader.jpeg' %}"  />
+          <span class="shape"></span>
+        </div>
+      </div>
+      <!-- Sidebar -->
+      {% include "ecom/elements/sidebar.html" %}
+      <!-- Header -->
+    {% include "ecom/elements/header.html" %}
+
+    {% block mainContent %}{% endblock %}
+          <!-- Footer -->
+       {% include "ecom/elements/footer.html" %}
+
+      <!-- Search Sidebar -->
+       {% include "ecom/elements/search.html" %}
+      
+  
+     
+    </main>
+  {% include "ecom/elements/script.html" %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const path = window.location.href;
+    const footer = document.getElementById("footer-spec");
+
+    if (!footer) return; // stop if footer not found
+
+    // URLs to check
+    const matchPages = ["contact-us", "faq"];
+
+    // Check if URL contains any of these
+    const shouldStick = matchPages.some(page => path.includes(page));
+
+    if (shouldStick) {
+        // Apply footer design
+        footer.style.position = "absolute";
+        footer.style.bottom = "0";
+        footer.style.left = "0";
+        footer.style.width = "100%";
+    } else {
+        // Remove previously applied inline styles
+        footer.style.position = "";
+        footer.style.bottom = "";
+        footer.style.left = "";
+        footer.style.width = "";
+    }
+
+});
+
+  </script>
+  </body>
+</html>

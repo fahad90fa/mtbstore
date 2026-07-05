@@ -1,0 +1,6 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block extraStyle %}{% endblock %}
+{% block bodyContent %}{% endblock %}
+{% block extraScript %}{% endblock %}

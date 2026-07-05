@@ -1,0 +1,105 @@
+{% extends 'ecom/base.html' %}
+{% load static %}
+{% block mainContent %}
+  <!-- Main Content -->
+  <div class="mn-main-content">
+    <div class="mn-breadcrumb m-b-30">
+      <div class="row">
+        <div class="col-12">
+          <div class="row gi_breadcrumb_inner">
+            <div class="col-md-6 col-sm-12">
+              <h2 class="mn-breadcrumb-title">Contact us Page</h2>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <!-- mn-breadcrumb-list start -->
+              <ul class="mn-breadcrumb-list">
+                <li class="mn-breadcrumb-item">
+                  <a href="/">Home</a>
+                </li>
+                <li class="mn-breadcrumb-item active">Contact us Page</li>
+              </ul>
+              <!-- mn-breadcrumb-list end -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact us section -->
+    <section class="mn-contact p-b-15">
+      <div class="mn-title">
+        <h2>Get in <span>Touch</span></h2>
+        <p>
+          If your question isn’t listed in our <a href="/faq/">FAQ page</a>, please fill out our contact form.
+        </p>
+      </div>
+      <div class="row p-t-80">
+        <div class="col-md-6 mn-contact-detail m-b-m-30">
+          <div class="mn-box m-b-30">
+            <div class="detail">
+              <div class="icon">
+                <i class="ri-mail-send-line"></i>
+              </div>
+              <div class="info">
+                <h3 class="title">Contact Mail</h3>
+                <p>mail.example@gmail.com</p>
+              </div>
+            </div>
+          </div>
+          <div class="mn-box m-b-30">
+            <div class="detail">
+              <div class="icon">
+                <i class="ri-customer-service-2-line"></i>
+              </div>
+              <div class="info">
+                <h3 class="title">Contact Phone</h3>
+                <p>(+92)-9876XXXXX</p>
+              </div>
+            </div>
+          </div>
+          <div class="mn-box m-b-30">
+            <div class="detail">
+              <div class="icon">
+                <i class="ri-map-pin-line"></i>
+              </div>
+              <div class="info">
+                <h3 class="title">Address</h3>
+                <p>Street Address, City - Shortform, ZipCode, Pakistan.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 m-t-767">
+          <form method="post" action="{% url 'ContactUs' %}">
+            {% if success %}
+              <div class="alert alert-success">Message sent successfully.</div>
+            {% endif %}
+            {% csrf_token %}
+            <div class="form-group">
+              <input type="text" class="form-control" id="fname" name="fname" placeholder="Full Name" />
+              {% if errors.fname %}
+                <small class="text-danger">{{ errors.fname }}</small>
+              {% endif %}
+            </div>
+            <div class="form-group">
+              <input type="email" class="form-control" id="umail" name="umail" placeholder="Email" />
+              {% if errors.umail %}
+                <small class="text-danger">{{ errors.umail }}</small>
+              {% endif %}
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" />
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" id="message" rows="5" name="message" placeholder="Message"></textarea>
+              {% if errors.message %}
+                <small class="text-danger">{{ errors.message }}</small>
+              {% endif %}
+            </div>
+            <button type="submit" class="mn-btn-2"><span>Submit</span></button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+{% endblock %}

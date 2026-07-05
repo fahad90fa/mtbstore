@@ -1,0 +1,26 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% block title %}Dashboard | MT&B House{% endblock %}
+{% block extraStyle %}{% endblock %}
+{% block bodyContent %}
+
+
+				<br>
+					
+					<!--begin::Container-->
+					<div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
+						<!--begin::Post-->
+						<div class="content flex-row-fluid" id="kt_content">
+
+						
+							{% include "dashboard/dashboardSections/sixbox.html" %}
+						
+							
+						</div>
+						<!--end::Post-->
+					</div>
+					<!--end::Container-->
+					
+					
+{% endblock %}
+{% block extraScript %}{% endblock %}

@@ -1,0 +1,878 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block title %}
+  Inventory | MT&B House
+{% endblock %}
+{% block extraStyle %}
+
+{% endblock %}
+{% block bodyContent %}
+  <!-- begin::Toolbar -->
+  <div class="toolbar py-5 py-lg-5" id="kt_toolbar">
+    <!-- begin::Container -->
+    <div id="kt_toolbar_container" class="container-xxl d-flex flex-stack flex-wrap">
+      <!-- begin::Page title -->
+      <div class="page-title d-flex flex-column me-3">
+        <!-- begin::Title -->
+        <h1 class="d-flex text-gray-900 fw-bold my-1 fs-3">Add Product</h1>
+        <!-- end::Title -->
+        <!-- begin::Breadcrumb -->
+        <ul class="breadcrumb breadcrumb-dot fw-semibold text-gray-600 fs-7 my-1">
+          <!-- begin::Item -->
+          <li class="breadcrumb-item text-gray-600">
+            <a href="/inventory/" class="text-gray-600 text-hover-primary">Inventory</a>
+          </li>
+          <!-- end::Item -->
+          <!-- begin::Item -->
+          <li class="breadcrumb-item text-gray-600">Add Product</li>
+          <!-- end::Item -->
+        </ul>
+        <!-- end::Breadcrumb -->
+      </div>
+      <!-- end::Page title -->
+      <!-- begin::Actions -->
+      <div class="d-flex align-items-center py-2 py-md-1">
+        <!-- begin::Wrapper -->
+        <div class="me-3">
+          <!-- begin::Menu -->
+          <a href="#" class="btn btn-light-primary fw-bold" data-bs-toggle="modal" data-bs-target="#kt_modal_new_subcategory" id="kt_toolbar_primary_button">Add Subcategory</a>
+          <!-- end::Menu -->
+        </div>
+        <!-- end::Wrapper -->
+        <!-- begin::Button -->
+        <a href="#" class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#kt_modal_new_category" id="kt_toolbar_primary_button">Add Category</a>
+        <!-- end::Button -->
+      </div>
+      <!-- end::Actions -->
+    </div>
+    <!-- end::Container -->
+  </div>
+  <!-- end::Toolbar -->
+  <!-- begin::Container -->
+  <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
+    <!-- begin::Post -->
+    <div class="content flex-row-fluid" id="kt_content">
+      <!-- begin::Form -->
+      <form id="kt_ecommerce_add_product_form" class="form d-flex flex-column flex-lg-row" method="post" action="/inventory/add-product/{{tem_id}}/" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- begin::Aside column -->
+        <div class="d-flex flex-column gap-7 gap-lg-10 w-100 w-lg-300px mb-7 me-lg-10">
+          {% if current_template %}
+            <!-- begin::Thumbnail settings -->
+            <div class="card card-flush py-4">
+              <!-- begin::Card header -->
+              <div class="card-header">
+                <!-- begin::Card title -->
+                <div class="card-title">
+                  <h2>Thumbnail</h2>
+                </div>
+                <!-- end::Card title -->
+              </div>
+              <!-- end::Card header -->
+              <!-- begin::Card body -->
+              <div class="card-body text-center pt-0">
+                <!-- begin::Image input -->
+                <!-- begin::Image input placeholder -->
+                 <style>.image-input-placeholder { background-image: url('{% static "assets/media/svg/files/blank-image.svg" %}'); } [data-bs-theme="dark"] .image-input-placeholder { background-image: url('{% static "assets/media/svg/files/blank-image-dark.svg" %}'); }</style>
+                <!-- end::Image input placeholder -->
+                <div class="image-input image-input-empty image-input-outline image-input-placeholder mb-3" data-kt-image-input="true">
+                  <!-- begin::Preview existing avatar -->
+                  <div class="image-input-wrapper w-150px h-150px"></div>
+                  <!-- end::Preview existing avatar -->
+                  <!-- begin::Label -->
+                  <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
+                    <i class="ki-duotone ki-pencil fs-7">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                    </i>
+                    <!-- begin::Inputs -->
+                    <input type="file" name="img" accept=".png, .jpg, .jpeg" />
+                    <input type="hidden" name="avatar_remove" />
+                    <!-- end::Inputs -->
+                  </label>
+                  <!-- end::Label -->
+                  <!-- begin::Cancel -->
+                  <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel avatar">
+                    <i class="ki-duotone ki-cross fs-2">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                    </i>
+                  </span>
+                  <!-- end::Cancel -->
+                  <!-- begin::Remove -->
+                  <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar">
+                    <i class="ki-duotone ki-cross fs-2">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                    </i>
+                  </span>
+                  <!-- end::Remove -->
+                </div>
+                <!-- end::Image input -->
+                <!-- begin::Description -->
+                <div class="text-muted fs-7">Set the product thumbnail image. Only *.png, *.jpg and *.jpeg image files are accepted</div>
+                <!-- end::Description -->
+              </div>
+              <!-- end::Card body -->
+            </div>
+            <!-- end::Thumbnail settings -->
+            <!-- begin::Status -->
+            <div class="card card-flush py-4">
+              <!-- begin::Card header -->
+              <div class="card-header">
+                <!-- begin::Card title -->
+                <div class="card-title">
+                  <h2>Status</h2>
+                </div>
+                <!-- end::Card title -->
+                <!-- begin::Card toolbar -->
+                <div class="card-toolbar">
+                  <div class="rounded-circle bg-primary w-15px h-15px" id="kt_ecommerce_add_product_status"></div>
+                </div>
+                <!-- begin::Card toolbar -->
+              </div>
+              <!-- end::Card header -->
+              <!-- begin::Card body -->
+              <div class="card-body pt-0">
+                <!-- begin::Select2 -->
+                <select name="status" class="form-select mb-2" onchange="changeColor(this)">
+                  <option value="draft">Draft</option>
+                  <option value="active" selected="selected">Active</option>
+                  <option value="inactive">In-Active</option>
+                </select>
+                <!-- end::Select2 -->
+                <!-- begin::Description -->
+                <div class="text-muted fs-7">Set the product status.</div>
+                <!-- end::Description -->
+              </div>
+              <!-- end::Card body -->
+            </div>
+            <!-- end::Status -->
+            <!-- begin::Category & tags -->
+            <div class="card card-flush py-4">
+              <!-- begin::Card header -->
+              <div class="card-header">
+                <!-- begin::Card title -->
+                <div class="card-title">
+                  <h2>Product Details</h2>
+                </div>
+                <!-- end::Card title -->
+              </div>
+              <!-- end::Card header -->
+              <!-- begin::Card body -->
+              <div class="card-body pt-0">
+                <!-- begin::Input group -->
+                <!-- begin::Label -->
+                <label class="form-label">Categories</label>
+                <!-- end::Label -->
+                <!-- begin::Select2 -->
+                <select id="categorySelect" name="category" class="form-select mb-2" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" onchange="loadSubcategories(this)">
+                  {% for cat in categories %}
+                    <option value="{{ cat.id }}">{{ cat.title }}</option>
+                  {% endfor %}
+                </select>
+                <!-- end::Select2 -->
+                <!-- begin::Description -->
+                <div class="text-muted fs-7 mb-7">Add product to a category.</div>
+                <!-- end::Description -->
+                <!-- end::Input group -->
+                <div id="subcategoryWrapper" style="display: none;">
+                  <!-- begin::Input group -->
+                  <!-- begin::Label -->
+                  <label class="form-label">Subcategories</label>
+                  <!-- end::Label -->
+                  <!-- begin::Select2 -->
+                  <select id="subcategorySelect" name="subcategory" class="form-select mb-2" data-control="select2" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">
+                    <option></option>
+                  </select>
+                  <!-- end::Select2 -->
+                  <!-- begin::Description -->
+                  <div class="text-muted fs-7 mb-7">Add product to a category.</div>
+                  <!-- end::Description -->
+                  <!-- end::Input group -->
+                </div>
+                <!-- begin::Input group -->
+                <!-- begin::Label -->
+                <label class="form-label d-block">Tags</label>
+                <!-- end::Label -->
+                <!-- begin::Input -->
+                <input id="kt_ecommerce_add_product_tags" name="tags" class="form-control mb-2" value=""  />
+                <!-- end::Input -->
+                <!-- begin::Description -->
+                <div class="text-muted fs-7">Add tags to a product.</div>
+                <!-- end::Description -->
+                <!-- end::Input group -->
+              </div>
+              <!-- end::Card body -->
+            </div>
+            <!-- end::Category & tags -->
+             <!--begin::Weekly stock-->
+									<div class="card card-flush py-4">
+										<!--begin::Card header-->
+										<div class="card-header">
+											<!--begin::Card title-->
+											<div class="card-title">
+												<h2>Stock</h2>
+											</div>
+											<!--end::Card title-->
+										</div>
+										<!--end::Card header-->
+										<!-- begin::Card body -->
+              <div class="card-body pt-0">
+                <!-- begin::Select2 -->
+                <select name="stock" class="form-select mb-2" >
+                  {% for  i in stocks %}
+                  <option value="{{ i.id }}">{{ i.name }}</option>
+                  {% endfor %}
+
+                </select>
+                <!-- end::Select2 -->
+                <!-- begin::Description -->
+                <div class="text-muted fs-7">Choose a stock for the product.</div>
+                <!-- end::Description -->
+              </div>
+              <!-- end::Card body -->
+									</div>
+									<!--end::Weekly stock-->
+            <!-- begin::Template settings -->
+            <div class="card card-flush py-4">
+              <!-- begin::Card header -->
+              <div class="card-header">
+                <!-- begin::Card title -->
+                <div class="card-title">
+                  <h2>Product Template</h2>
+                </div>
+                <!-- end::Card title -->
+              </div>
+              <!-- end::Card header -->
+              <!-- begin::Card body -->
+              <div class="card-body pt-0">
+                <!-- begin::Select store template -->
+                <label for="kt_ecommerce_add_product_store_template" class="form-label">Select a product template</label>
+                <!-- end::Select store template -->
+                <!-- begin::Select2 -->
+                <select class="form-select mb-2" data-control="select2" data-hide-search="true" data-placeholder="Select an option" id="kt_ecommerce_add_product_store_template" onchange="redirectToPage(this)">
+                  <option></option>
+                  <option value="{{ current_template.tem_id }}" selected="selected">{{ current_template.template_name }}</option>
+                  {% for i in templates %}
+                    <option value="{{ i.tem_id }}">{{ i.template_name }}</option>
+                  {% endfor %}
+                </select>
+                <!-- end::Select2 -->
+                <!-- begin::Description -->
+                <div class="text-muted fs-7">Assign a template to define how a single product is added.</div>
+                <!-- end::Description -->
+              </div>
+              <!-- end::Card body -->
+            </div>
+            <!-- end::Template settings -->
+          {% else %}
+            <!-- begin::Template settings -->
+            <div class="card card-flush py-4">
+              <!-- begin::Card header -->
+              <div class="card-header">
+                <!-- begin::Card title -->
+                <div class="card-title">
+                  <h2>Product Template</h2>
+                </div>
+                <!-- end::Card title -->
+              </div>
+              <!-- end::Card header -->
+              <!-- begin::Card body -->
+              <div class="card-body pt-0">
+                <!-- begin::Select store template -->
+                <label for="kt_ecommerce_add_product_store_template" class="form-label">Select a product template</label>
+                <!-- end::Select store template -->
+                <!-- begin::Select2 -->
+                <select class="form-select mb-2" data-control="select2" data-hide-search="true" data-placeholder="Select an option" id="kt_ecommerce_add_product_store_template" onchange="redirectToPage(this)">
+                  <option></option>
+                  <option value="none" selected="selected" hidden>Template not found!</option>
+                  {% for i in templates %}
+                    <option value="{{ i.tem_id }}">{{ i.template_name }}</option>
+                  {% endfor %}
+                </select>
+                <!-- end::Select2 -->
+                <!-- begin::Description -->
+                <div class="text-muted fs-7">Assign a template to define how a single product is added.</div>
+                <!-- end::Description -->
+              </div>
+              <!-- end::Card body -->
+            </div>
+            <!-- end::Template settings -->
+          {% endif %}
+        </div>
+        <!-- end::Aside column -->
+        {% if current_template %}
+          <!-- begin::Main column -->
+          <div class="d-flex flex-column flex-row-fluid gap-7 gap-lg-10">
+            <!-- begin:::Tabs -->
+            <ul class="nav nav-custom nav-tabs nav-line-tabs nav-line-tabs-2x border-0 fs-4 fw-semibold mb-n2">
+              <!-- begin:::Tab item -->
+              <li class="nav-item">
+                <a class="nav-link text-active-primary pb-4 active" data-bs-toggle="tab" href="#kt_ecommerce_add_product_general">Basic details</a>
+              </li>
+              <!-- end:::Tab item -->
+              <!-- begin:::Tab item -->
+              <li class="nav-item">
+                <a class="nav-link text-active-primary pb-4" data-bs-toggle="tab" href="#kt_ecommerce_add_product_advanced">Advanced</a>
+              </li>
+              <!-- end:::Tab item -->
+             
+            </ul>
+            <!-- end:::Tabs -->
+            <!-- begin::Tab content -->
+            <div class="tab-content">
+              <!-- begin::Tab pane -->
+              <div class="tab-pane fade show active" id="kt_ecommerce_add_product_general" role="tab-panel">
+                <div class="d-flex flex-column gap-7 gap-lg-10">
+                  <!-- begin::General options -->
+                  <div class="card card-flush py-4">
+                    <!-- begin::Card header -->
+                    <div class="card-header">
+                      <div class="card-title">
+                        <h2>Required fields</h2>
+                      </div>
+                    </div>
+                    <!-- end::Card header -->
+                    <!-- begin::Card body -->
+                    <div class="card-body pt-0">
+                      <!-- begin::Input group -->
+                      <div class="mb-10 fv-row">
+                        <!-- begin::Label -->
+                        <label class="required form-label">Product Name</label>
+                        <!-- end::Label -->
+                        <!-- begin::Input -->
+                        <input type="text" name="title" class="form-control mb-2" placeholder="Product name" maxlength="25" value="" />
+                        <!-- end::Input -->
+                        <!-- begin::Description -->
+                        <div class="text-muted fs-7">A product name is required and recommended to be unique.</div>
+                        <!-- end::Description -->
+                      </div>
+                      <!-- end::Input group -->
+                      <!-- begin::Input group -->
+                      <div>
+                        <!-- begin::Label -->
+                        <label class="form-label">Description</label>
+                        <!-- end::Label -->
+                        <!-- begin::Editor -->
+                        <div id="kt_ecommerce_add_product_description" class="min-h-200px mb-2"></div>
+                        <input type="hidden" name="description" id="description_input">
+                        <!-- end::Editor -->
+                        <!-- begin::Description -->
+                        <div class="text-muted fs-7">Set a description to the product for better visibility.</div>
+                        <!-- end::Description -->
+                      </div>
+                      <!-- end::Input group -->
+                    </div>
+                    <!-- end::Card header -->
+                  </div>
+                  <!-- end::General options -->
+                  <!-- begin::Media -->
+                  <div class="card card-flush py-4">
+                    <!-- begin::Card header -->
+                    <div class="card-header">
+                      <div class="card-title">
+                        <h2>Stock Details</h2>
+                      </div>
+                    </div>
+                    <!-- end::Card header -->
+                    <!-- begin::Card body -->
+                    <div class="card-body pt-0">
+                       <!-- begin::Stock -->
+                      <div class="d-flex flex-wrap gap-5">
+                        <!-- begin::Input group -->
+                        <div class="fv-row w-100 flex-md-root">
+                          <!-- begin::Label -->
+                          <label class="required form-label">Available Products</label>
+                          <!-- end::Label -->
+                          <!-- begin::Input -->
+                          <input type="number" class="form-control mb-2" name="available_product" value=""  />
+                          <!-- end::Input -->
+                          <!-- begin::Description -->
+                          <div class="text-muted fs-7">Set the products in stock.</div>
+                          <!-- end::Description -->
+                        </div>
+                        <!-- end::Input group -->
+                        <!-- begin::Input group -->
+                        <div class="fv-row w-100 flex-md-root">
+                          <!-- begin::Label -->
+                          <label class="required form-label">Sold Products</label>
+                          <!-- end::Label -->
+                          <!-- begin::Input -->
+                          <input type="number" class="form-control mb-2" name="sold_product" value="0" readonly disabled />
+                          <!-- end::Input -->
+                          <!-- begin::Description -->
+                          <div class="text-muted fs-7">View mode only.</div>
+                          <!-- end::Description -->
+                        </div>
+                        <!-- end::Input group -->
+                        <!-- begin::Input group -->
+                        <div class="fv-row w-100 flex-md-root">
+                          <!-- begin::Label -->
+                          <label class="form-label">Total Stock</label>
+                          <!-- end::Label -->
+                          <!-- begin::Input -->
+                          <input type="number" class="form-control mb-2" name="stock_product" value="0" readonly />
+                          <!-- end::Input -->
+                          <!-- begin::Description -->
+                          <div class="text-muted fs-7">View mode only.</div>
+                          <!-- end::Description -->
+                        </div>
+                        <!-- end::Input group -->
+                      </div>
+                      <!-- end:Stock -->
+                    </div>
+                    <!-- end::Card header -->
+                  </div>
+                  <!-- end::Media -->
+                  <!-- begin::Pricing -->
+                  <div class="card card-flush py-4">
+                    <!-- begin::Card header -->
+                    <div class="card-header">
+                      <div class="card-title">
+                        <h2>Pricing</h2>
+                      </div>
+                    </div>
+                    <!-- end::Card header -->
+                    <!-- begin::Card body -->
+                    <div class="card-body pt-0">
+                      <!-- begin::Input group -->
+                      <div class="mb-10 fv-row">
+                        <!-- begin::Label -->
+                        <label class="required form-label">Base Price</label>
+                        <!-- end::Label -->
+                        <!-- begin::Input -->
+                        <input type="text" name="base_price_pre" class="form-control mb-2" placeholder="Product price" value="" />
+                        <!-- end::Input -->
+                        <!-- begin::Description -->
+                        <div class="text-muted fs-7">Set the product price.</div>
+                        <!-- end::Description -->
+                      </div>
+                      <!-- end::Input group -->
+                      <!-- begin::Input group -->
+                      <div class="fv-row mb-10">
+                        <!-- begin::Label -->
+                        <label class="fs-6 fw-semibold mb-2">
+                          Retail Price Calculator
+                          <span class="ms-1" data-bs-toggle="tooltip" title="Enter the base price above. If the retail price varies, select Positive or Negative and enter the percentage below, the final price will calculate automatically. To use the same price, select Fixed and leave the percentage field blank.">
+                            <i class="ki-duotone ki-information-5 text-gray-500 fs-6">
+                              <span class="path1"></span>
+                              <span class="path2"></span>
+                              <span class="path3"></span>
+                            </i>
+                          </span>
+                        </label>
+                        <!-- End::Label -->
+                        <!-- begin::Row -->
+                        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-1 row-cols-xl-3 g-9" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button='true']">
+                          <!-- begin::Col -->
+                          <div class="col">
+                            <!-- begin::Option -->
+                            <label class="btn btn-outline btn-outline-dashed btn-active-light-primary active d-flex text-start p-6" data-kt-button="true">
+                              <!-- begin::Radio -->
+                              <span class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1"><input class="form-check-input" type="radio" name="percentage" value="+" checked="checked" /></span>
+                              <!-- end::Radio -->
+                              <!-- begin::Info -->
+                              <span class="ms-5"><span class="fs-4 fw-bold text-gray-800 d-block">Positive Percentage</span></span>
+                              <!-- end::Info -->
+                            </label>
+                            <!-- end::Option -->
+                          </div>
+                          <!-- end::Col -->
+                          <!-- begin::Col -->
+                          <div class="col">
+                            <!-- begin::Option -->
+                            <label class="btn btn-outline btn-outline-dashed btn-active-light-primary d-flex text-start p-6" data-kt-button="true">
+                              <!-- begin::Radio -->
+                              <span class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1"><input class="form-check-input" type="radio" name="percentage" value="-" /></span>
+                              <!-- end::Radio -->
+                              <!-- begin::Info -->
+                              <span class="ms-5"><span class="fs-4 fw-bold text-gray-800 d-block">Negative Percentage</span></span>
+                              <!-- end::Info -->
+                            </label>
+                            <!-- end::Option -->
+                          </div>
+                          <!-- end::Col -->
+                          <!-- begin::Col -->
+                          <div class="col">
+                            <!-- begin::Option -->
+                            <label class="btn btn-outline btn-outline-dashed btn-active-light-primary d-flex text-start p-6" data-kt-button="true">
+                              <!-- begin::Radio -->
+                              <span class="form-check form-check-custom form-check-solid form-check-sm align-items-start mt-1"><input class="form-check-input" type="radio" name="percentage" value="fixed" /></span>
+                              <!-- end::Radio -->
+                              <!-- begin::Info -->
+                              <span class="ms-5"><span class="fs-4 fw-bold text-gray-800 d-block">Fixed Price</span></span>
+                              <!-- end::Info -->
+                            </label>
+                            <!-- end::Option -->
+                          </div>
+                          <!-- end::Col -->
+                        </div>
+                        <!-- end::Row -->
+                      </div>
+                      <!-- end::Input group -->
+                      <!-- begin::Input group -->
+                      <div class=" mb-10 fv-row" id="kt_ecommerce_add_product_discount_percentage">
+                        <!-- begin::Label -->
+                        <label class="form-label">Set Percentage</label>
+                        <!-- end::Label -->
+                        <!-- begin::Slider -->
+                        <div class="d-flex flex-column text-center mb-5">
+                          <div class="d-flex align-items-start justify-content-center mb-7">
+                            <span class="fw-bold fs-3x" id="kt_ecommerce_add_product_discount_label">0</span>
+                            <span class="fw-bold fs-4 mt-1 ms-2">%</span>
+                          </div>
+                          <div id="kt_ecommerce_add_product_discount_slider" class="noUi-sm"></div>
+                        </div>
+                        <input type="hidden" name="base_price_percentage" id="percentage_value_input" value="">
+                        <!-- end::Slider -->
+                        <!-- begin::Description -->
+                        <div class="text-muted fs-7">Set a percentage to be applied on this product.</div>
+                        <!-- end::Description -->
+                      </div>
+                      <!-- end::Input group -->
+                      <!-- begin::Input group -->
+                      <div class=" mb-10 fv-row" id="kt_ecommerce_add_product_discount_fixed">
+                        <!-- begin::Label -->
+                        <label class="form-label">Final Retail Price</label>
+                        <!-- end::Label -->
+                        <!-- begin::Input -->
+                        <input type="text" name="base_price" class="form-control mb-2" placeholder="Retail price" />
+                        <!-- end::Input -->
+                        <!-- begin::Description -->
+                        <div class="text-muted fs-7">Retail Price, This field is auto-calculated. You can edit it if needed, but it's recommended to leave it unchanged.</div>
+                        <!-- end::Description -->
+                      </div>
+                      <!-- end::Input group -->
+                       <!--begin::Input group-->
+										<div class="fv-row row mb-15">
+											<!--begin::Col-->
+											<div class="col-md-3 d-flex align-items-center">
+												<!--begin::Label-->
+												<label class="fs-6 fw-semibold">Show Price</label>
+												<!--end::Label-->
+											</div>
+											<!--end::Col-->
+											<!--begin::Col-->
+											<div class="col-md-9">
+												<!--begin::Switch-->
+												<div class="form-check form-switch form-check-custom form-check-solid me-10">
+													<input class="form-check-input h-30px w-50px" name="" type="checkbox" value="" id="autotimezone" />
+                          <label class="form-check-label" for="autotimezone" id="stausText"></label>
+													<input type="hidden" name="show_price" value="">
+												</div>
+												<!--begin::Switch-->
+											</div>
+											<!--end::Col-->
+										</div>
+										<!--end::Input group-->
+                    </div>
+                    <!-- end::Card header -->
+                  </div>
+                  <!-- end::Pricing -->
+                </div>
+              </div>
+              <!-- end::Tab pane -->
+              <!-- begin::Tab pane -->
+              <div class="tab-pane fade" id="kt_ecommerce_add_product_advanced" role="tab-panel">
+                <div class="d-flex flex-column gap-7 gap-lg-10">
+                  <!-- begin::Inventory -->
+                  <div class="card card-flush py-4">
+                    <!-- begin::custom fields -->
+                    <div class="card-header">
+                      <div class="card-title">
+                        <h2>Custom fields</h2>
+                      </div>
+                    </div>
+                    <!-- end::Card header -->
+                    <!-- begin::Card body -->
+                    <div class="card-body pt-0">
+                      {% for field in current_template.custom_fields.all %}
+
+                      <div class="mb-10 fv-row">
+                        <label class="required form-label">{{ field.field_name }}</label>
+                        {% if field.field_type == 'text' %}
+                          <input type="text" name="custom_{{ field.id }}" class="form-control mb-2" placeholder="{{ field.field_name }}" value="{{ field.default_value }}" {% if field.is_required == 'True' %}required{% endif %} />
+                        
+                        {% elif field.field_type == 'number' %}
+                          <input type="number" name="custom_{{ field.id }}" class="form-control mb-2" placeholder="{{ field.field_name }}" value="{{ field.default_value }}" {% if field.is_required == 'True' %}required{% endif %} />
+
+                        {% elif field.field_type == 'date' %}
+                          <input type="date" name="custom_{{ field.id }}" class="form-control mb-2" value="{{ field.default_value }}" {% if field.is_required == 'True' %}required{% endif %}/>
+                        {% endif %}
+
+
+                      </div>
+                      {% endfor %}
+                     
+                  
+                    </div>
+                    <!-- end::Card header -->
+                  </div>
+                  <!-- end::custom fields -->
+             
+            
+               
+                </div>
+              </div>
+              <!-- end::Tab pane -->
+            </div>
+            <!-- end::Tab content -->
+            <div class="d-flex justify-content-end">
+              <!-- begin::Button -->
+              <a href="apps/ecommerce/catalog/products.html" id="kt_ecommerce_add_product_cancel" class="btn btn-light me-5">Cancel</a>
+              <!-- end::Button -->
+              <!-- begin::Button -->
+              <button type="submit" id="kt_ecommerce_add_product_submit" class="btn btn-primary">
+                <span class="indicator-label">Add Product</span>
+              </button>
+              <!-- end::Button -->
+            </div>
+          </div>
+          <!-- end::Main column -->
+        {% else %}
+          <!-- begin::Alert -->
+          <div class="alert alert-info d-flex align-items-center p-5" style="height: 86px;">
+            <!-- begin::Icon -->
+            <i class="ki-duotone ki-files fs-2hx text-info me-4">
+              <span class="path1"></span>
+              <span class="path2"></span>
+            </i>
+            <!-- end::Icon -->
+
+            <!-- begin::Wrapper -->
+            <div class="d-flex flex-column">
+              <!-- begin::Title -->
+              <h4 class="mb-1 text-dark">No Templete Selected</h4>
+              <!-- end::Title -->
+
+              <!-- begin::Content -->
+              <span>You haven't selected any template yet. Select template & start adding your products.</span>
+              <!-- end::Content -->
+            </div>
+            <!-- end::Wrapper -->
+          </div>
+          <!-- end::Alert -->
+        {% endif %}
+      </form>
+      <!-- end::Form -->
+    </div>
+    <!-- end::Post -->
+  </div>
+  <!-- end::Container -->
+
+
+
+
+  {% include 'dashboard/inventoryPages/addCategory.html' %}
+  {% include 'dashboard/inventoryPages/addSubcategory.html' %}
+{% endblock %}
+{% block extraScript %}
+  <script src="{% static 'assets/js/custom/apps/ecommerce/catalog/save-product.js' %}"></script>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const checkbox = document.getElementById("autotimezone");
+    const statusLabel = document.getElementById("stausText");
+    const hiddenStatus = document.querySelector("input[name='show_price']");
+
+    checkbox.addEventListener("change", function() {
+        if (checkbox.checked) {
+            statusLabel.textContent = "Active";
+            hiddenStatus.value = "active"; // Active status
+        } else {
+            statusLabel.textContent = "In-active";
+            hiddenStatus.value = "inactive"; // Inactive status
+        }
+    });
+});
+
+
+     function loadSubcategories(selectElement) {
+    const selectedValues = Array.from(selectElement.selectedOptions).map(option => option.value);
+    const subcategoryWrapper = document.getElementById("subcategoryWrapper");
+    const subcategorySelect = document.getElementById("subcategorySelect");
+
+    if (selectedValues.length === 0) {
+      subcategoryWrapper.style.display = "none";
+      subcategorySelect.innerHTML = "";
+      return;
+    }
+
+    const queryString = selectedValues.map(id => `category_ids[]=${id}`).join("&");
+
+    fetch(`/inventory/get-subcategories/?${queryString}`)
+      .then(response => response.json())
+      .then(data => {
+        const subcats = data.subcategories;
+        if (subcats.length > 0) {
+          subcategorySelect.innerHTML = "";
+          subcats.forEach(sub => {
+            const option = document.createElement("option");
+            option.value = sub.id;
+            option.textContent = sub.title;
+            subcategorySelect.appendChild(option);
+          });
+          subcategoryWrapper.style.display = "block";
+        } else {
+          subcategoryWrapper.style.display = "none";
+          subcategorySelect.innerHTML = "";
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching subcategories:", error);
+      });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function changeColor(select) {
+      const statusIndicator = document.getElementById('kt_ecommerce_add_product_status')
+      const value = select.value
+      statusIndicator.classList.remove('bg-primary', 'bg-danger', 'bg-warning')
+    
+      if (value === 'active') {
+        statusIndicator.classList.add('bg-primary')
+      } else if (value === 'inactive') {
+        statusIndicator.classList.add('bg-danger')
+      } else {
+        statusIndicator.classList.add('bg-warning')
+      }
+    }
+    
+    function redirectToPage(select) {
+      const selectedValue = select.value
+      if (selectedValue) {
+        let url = '/inventory/add-product/' + selectedValue + '/'
+        window.location.href = url
+      }
+    }
+  </script>
+  <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("kt_ecommerce_add_product_form");
+            const button = document.getElementById("kt_ecommerce_add_product_submit");
+
+            form.addEventListener("submit", function () {
+                button.disabled = true;
+                button.innerHTML = `
+                     <span style="display: inline-flex; align-items: center; gap: 8px;">
+                    <img class="fa-spin" src="{% static 'assets/media/auth/wheel.png' %}" alt="Loading..." style="width: 24px; height: 24px;" />
+                    <span>Please wait...</span>
+                </span>
+                `;
+            });
+        });
+        </script>
+        <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const availableInput = document.querySelector('input[name="available_product"]');
+    const stockInput = document.querySelector('input[name="stock_product"]');
+
+    if (availableInput && stockInput) {
+      availableInput.addEventListener("input", function () {
+        stockInput.value = this.value;
+      });
+    }
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const preInput = document.querySelector('input[name="base_price_pre"]');
+    const finalInput = document.querySelector('input[name="base_price"]');
+    const radios = document.querySelectorAll('input[name="percentage"]');
+    const percentageLabel = document.getElementById("kt_ecommerce_add_product_discount_label");
+
+    function calculatePrice() {
+      const prePrice = parseFloat(preInput.value);
+      const percentage = parseFloat(percentageLabel.textContent); // Get % from slider label
+      const selectedRadio = document.querySelector('input[name="percentage"]:checked')?.value;
+
+      if (isNaN(prePrice)) {
+        finalInput.value = '';
+        return;
+      }
+
+      if (selectedRadio === 'fixed') {
+        finalInput.value = prePrice.toFixed(2);
+      } else if (selectedRadio === '+') {
+        const result = prePrice + (prePrice * percentage / 100);
+        finalInput.value = result.toFixed(2);
+      } else if (selectedRadio === '-') {
+        const result = prePrice - (prePrice * percentage / 100);
+        finalInput.value = result.toFixed(2);
+      }
+    }
+
+    // Detect input change
+    preInput.addEventListener('input', calculatePrice);
+    radios.forEach(radio => radio.addEventListener('change', calculatePrice));
+
+    // If using noUiSlider, hook into its update event
+    if (typeof noUiSlider !== 'undefined') {
+      const slider = document.getElementById('kt_ecommerce_add_product_discount_slider').noUiSlider;
+      if (slider) {
+        slider.on('update', function (values, handle) {
+          // Assuming you’re already updating the label somewhere else
+          calculatePrice();
+        });
+      }
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const percentageLabel = document.getElementById("kt_ecommerce_add_product_discount_label");
+    const percentInput = document.getElementById("percentage_value_input");
+
+    let lastValue = null;
+    setInterval(() => {
+      const currentValue = parseFloat(percentageLabel.textContent.replace('%', '').trim());
+
+      if (!isNaN(currentValue) && currentValue !== lastValue) {
+        percentInput.value = currentValue;
+        lastValue = currentValue;
+      }
+    }, 100); // checks every 100ms
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const hiddenInput = document.getElementById("description_input");
+    const editorDiv = document.getElementById("kt_ecommerce_add_product_description");
+
+    const quill = Quill.find(editorDiv);
+
+    if (quill) {
+      // Sync on any change
+      quill.on('text-change', function () {
+        hiddenInput.value = quill.root.innerHTML;
+      });
+    }
+  });
+
+
+</script>
+
+{% if product_added %}
+<script>
+    window.open("{{ new_product_url }}", "_blank");
+</script>
+{% endif %}
+
+
+
+{% endblock %}

@@ -1,0 +1,217 @@
+{% extends "ecom/base.html" %}
+{% load static %}
+{% block mainContent %}
+<!-- Main Content -->
+		<div class="mn-main-content">
+			<div class="mn-breadcrumb m-b-30">
+				<div class="row">
+					<div class="col-12">
+						<div class="row gi_breadcrumb_inner">
+							<div class="col-md-6 col-sm-12">
+								<h2 class="mn-breadcrumb-title">Shop Page</h2>
+							</div>
+							<div class="col-md-6 col-sm-12">
+								<!-- mn-breadcrumb-list start -->
+								<ul class="mn-breadcrumb-list">
+									<li class="mn-breadcrumb-item">
+										<a href="/">Home</a>
+									</li>
+
+									<li class="mn-breadcrumb-item">
+										<a href="{% url 'shop' %}">Shop</a>
+									</li>
+
+									{% if category_slug %}
+										<li class="mn-breadcrumb-item">
+											<a href="{% url 'shop_category' category_slug %}">
+												{{ category_slug|capfirst }}
+											</a>
+										</li>
+									{% endif %}
+
+									{% if subcategory_slug %}
+										<li class="mn-breadcrumb-item active">
+											{{ subcategory_slug|capfirst }}
+										</li>
+									{% else %}
+										{% if category_slug %}
+											<li class="mn-breadcrumb-item active">
+												{{ category_slug|capfirst }}
+											</li>
+										{% else %}
+											<li class="mn-breadcrumb-item active">
+												Shop Page
+											</li>
+										{% endif %}
+									{% endif %}
+								</ul>
+
+								<!-- mn-breadcrumb-list end -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xxl-12">
+					<!-- Shop section -->
+					<section class="mn-shop">
+						<div class="row">
+							<!-- Sidebar Area Start -->
+							<div class="filter-sidebar-overlay"></div>
+						
+							<div class="mn-shop-rightside col-md-12 m-t-991">
+
+	<!-- Shop Top Start -->
+	<div class="mn-pro-list-top d-flex">
+		<div class="col-md-6 mn-grid-list">
+			<div class="mn-gl-btn">
+				<button class="grid-btn btn-grid-50">
+					<i class="ri-gallery-view-2"></i>
+				</button>
+				<button class="grid-btn btn-list-50 active">
+					<i class="ri-list-check-2"></i>
+				</button>
+			</div>
+		</div>
+
+		<div class="col-md-6 mn-sort-select">
+			<div class="mn-select-inner">
+				<form method="get" class="mn-select-inner">
+				<select name="per_page" id="mn-select" onchange="this.form.submit()">
+						<option value="8"  {% if per_page == 8 %}selected{% endif %}>8 per page</option>
+						<option value="16" {% if per_page == 16 %}selected{% endif %}>16 per page</option>
+						<option value="24" {% if per_page == 24 %}selected{% endif %}>24 per page</option>
+						<option value="40" {% if per_page == 40 %}selected{% endif %}>40 per page</option>
+				</select>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Shop Top End -->
+
+	<!-- Shop Content Start -->
+	<div class="shop-pro-content">
+		<div class="shop-pro-inner list-view-50">
+			<div class="row">
+
+				{% for product in products %}
+				<div class="col-lg-3 col-md-4 col-sm-6 col-12 m-b-24 mn-product-box pro-gl-content width-50">
+					<div class="mn-product-card">
+
+						<div class="mn-product-img">
+							<div class="mn-img">
+								<a href="/shop-view/product/{{ product.prod_id }}/" class="image">
+									{% if product.img %}
+										<img class="main-img" src="{{ product.img.url }}" alt="{{ product.title }}">
+										<img class="hover-img" src="{{ product.img.url }}" alt="{{ product.title }}">
+									{% else %}
+										<img class="main-img" src="{% static 'ecom/assets/img/product/img_not_found.png' %}">
+										<img class="hover-img" src="{% static 'ecom/assets/img/product/img_not_found.png' %}">
+									{% endif %}
+								</a>
+
+								<div class="mn-options">
+									<ul>
+										<li>
+											<a href="/shop-view/product/{{ product.prod_id }}/">
+												<i class="ri-eye-line"></i>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+
+						<div class="mn-product-detail">
+							<div class="cat">
+								{% for cat in product.category.all %}
+									<a href="/shop/{{ cat.slug }}/">{{ cat.title }}</a>{% if not forloop.last %}, {% endif %}
+								{% endfor %}
+							</div>
+
+							<h5>
+								<a href="/shop-view/product/{{ product.prod_id }}/">
+									{{ product.title }}
+								</a>
+							</h5>
+
+							<p class="mn-info">
+								{{ product.description|truncatechars:180|safe }}
+							</p>
+
+							{% if product.show_price %}
+							<div class="mn-price">
+								<span>{{ product.show_price }}</span>
+							</div>
+							{% endif %}
+						</div>
+
+					</div>
+				</div>
+				{% empty %}
+				<div class="col-12">
+					<p>No products found.</p>
+				</div>
+				{% endfor %}
+
+			</div>
+		</div>
+
+		<!-- Pagination Start -->
+		<div class="mn-pro-pagination m-b-15">
+			<span>
+				Showing
+				{{ products.start_index }} -
+				{{ products.end_index }}
+				of {{ products.paginator.count }} item(s)
+			</span>
+
+			<ul class="mn-pro-pagination-inner">
+
+				{% if products.has_previous %}
+				<li>
+				<a class="next" href="?page={{ products.previous_page_number }}&per_page={{ per_page }}">
+					<i class="ri-arrow-left-double-line"></i> Prev
+				</a>
+				</li>
+				{% endif %}
+
+				{% for num in products.paginator.page_range %}
+				{% if num == products.number %}
+					<li><a class="active">{{ num }}</a></li>
+				{% elif num >= products.number|add:'-2' and num <= products.number|add:'2' %}
+					<li>
+					<a href="?page={{ num }}&per_page={{ per_page }}">{{ num }}</a>
+					</li>
+				{% endif %}
+				{% endfor %}
+
+				{% if products.has_next %}
+				<li>
+				<a class="next" href="?page={{ products.next_page_number }}&per_page={{ per_page }}">
+					Next <i class="ri-arrow-right-double-line"></i>
+				</a>
+				</li>
+				{% endif %}
+
+
+			</ul>
+		</div>
+		<!-- Pagination End -->
+
+	</div>
+	<!-- Shop Content End -->
+
+</div>
+
+
+
+
+
+						</div>
+					</section>
+				</div>
+			</div>
+		</div>
+{% endblock %}

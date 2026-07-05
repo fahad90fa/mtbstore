@@ -1,0 +1,190 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block title %}
+  Merchants | MT&B House
+{% endblock %}
+{% block extraStyle %}
+{% endblock %}
+{% block bodyContent %}
+  <!-- begin::Toolbar -->
+  <div class="toolbar py-5 py-lg-5" id="kt_toolbar">
+    <!-- begin::Container -->
+    <div id="kt_toolbar_container" class="container-xxl d-flex flex-stack flex-wrap">
+      <!-- begin::Page title -->
+      <div class="page-title d-flex flex-column me-3">
+        <!-- begin::Title -->
+        <h1 class="d-flex text-gray-900 fw-bold my-1 fs-3">Employees</h1>
+        <!-- end::Title -->
+        <!-- begin::Breadcrumb -->
+        <ul class="breadcrumb breadcrumb-dot fw-semibold text-gray-600 fs-7 my-1">
+          <!-- begin::Item -->
+          <li class="breadcrumb-item text-gray-600">
+            <a href="/employees/" class="text-gray-600 text-hover-primary">Employees</a>
+          </li>
+          <!-- end::Item -->
+          <!-- begin::Item -->
+          <li class="breadcrumb-item text-gray-600">Employees List</li>
+          <!-- end::Item -->
+        </ul>
+        <!-- end::Breadcrumb -->
+      </div>
+      <!-- end::Page title -->
+    </div>
+    <!-- end::Container -->
+  </div>
+  <!-- end::Toolbar -->
+  <!-- begin::Container -->
+  <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
+    <!-- begin::Post -->
+    <div class="content flex-row-fluid" id="kt_content">
+      <!-- begin::Card -->
+      <div class="card">
+        <!-- begin::Card header -->
+        <div class="card-header border-0 pt-6">
+          <!-- begin::Card title -->
+          <div class="card-title">
+            <!-- begin::Search -->
+            <div class="d-flex align-items-center position-relative my-1">
+              <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-5">
+                <span class="path1"></span>
+                <span class="path2"></span>
+              </i>
+              <input type="text" data-kt-user-table-filter="search" class="form-control form-control-solid w-250px ps-13" placeholder="Search Employees" />
+            </div>
+            <!-- end::Search -->
+          </div>
+          <!-- begin::Card title -->
+          <!-- begin::Card toolbar -->
+          <div class="card-toolbar">
+            <!-- begin::Toolbar -->
+            <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
+              <!-- begin::Add user -->
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_user"><i class="ki-duotone ki-plus fs-2"></i>Add Employee</button>
+              <!-- end::Add user -->
+            </div>
+            <!-- end::Toolbar -->
+          </div>
+          <!-- end::Card toolbar -->
+        </div>
+        <!-- end::Card header -->
+        <!-- begin::Card body -->
+        <div class="card-body py-4">
+          {% if employees %}
+            <!-- begin::Table -->
+            <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_users">
+              <thead>
+                <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                  <th class="min-w-135px">Employee</th>
+                  <th class="min-w-165px">Status</th>
+                  <th class="min-w-165px">Salary</th>
+                  <th class="min-w-165px">Joined Date</th>
+                  <th class="text-end min-w-100px">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="text-gray-600 fw-semibold">
+                {% for i in employees %}
+                  <tr>
+                    <td class="d-flex align-items-center">
+                      <!-- begin:: Avatar -->
+                      <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                        <a href="/employees/view/{{ i.mtb_id }}/">
+                          <div class="symbol-label">
+                            {% if i.profile_pic %}
+                              <img src="/media/{{ i.profile_pic }}" alt="{{ i.first_name }}" class="w-100" />
+                            {% else %}
+                              <img src="{% static 'assets\media\avatars\blank.png' %}" alt="{{ i.first_name }}" class="w-100" />
+                            {% endif %}
+                          </div>
+                        </a>
+                      </div>
+                      <!-- end::Avatar -->
+                      <!-- begin::User details -->
+                      <div class="d-flex flex-column">
+                        <a href="/employees/view/{{ i.mtb_id }}/" class="text-gray-800 text-hover-primary mb-1">{{ i.first_name }}</a>
+                        <span>{{ i.email }}</span>
+                      </div>
+                      <!-- begin::User details -->
+                    </td>
+                    <td>
+                      <div class="badge badge-light fw-bold">{{ i.status }}</div>
+                    </td>
+                    <td>{{ i.salary }}</td>
+                    <td>{{ i.created_at }}</td>
+                    <td class="text-end" data-kt-filemanager-table="action_dropdown">
+                      <div class="d-flex justify-content-end">
+                        <!-- begin::More -->
+                        <div class="ms-2">
+                          <a href="/merchants/delete/{{ i.id }}/" class="btn btn-sm btn-icon btn-light btn-active-light-primary me-2" onclick="return confirm('Are you sure you want to delete this employee?');">
+                            <i class="ki-duotone ki-trash fs-5 m-0">
+                              <span class="path1"></span>
+                              <span class="path2"></span>
+                              <span class="path3"></span>
+                              <span class="path4"></span>
+                            </i>
+                          </a>
+                          <!-- end::More -->
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <!-- end::Table -->
+          {% else %}
+            <!-- begin::Alert -->
+            <div class="alert alert-info d-flex align-items-center p-5">
+              <!-- begin::Icon -->
+              <i class="ki-duotone ki-files fs-2hx text-info me-4">
+                <span class="path1"></span>
+                <span class="path2"></span>
+              </i>
+              <!-- end::Icon -->
+
+              <!-- begin::Wrapper -->
+              <div class="d-flex flex-column">
+                <!-- begin::Title -->
+                <h4 class="mb-1 text-dark">No Employee Accounts</h4>
+                <!-- end::Title -->
+
+                <!-- begin::Content -->
+                <span>You haven’t added any Employee accounts yet. Add your first account to start managing transactions and sales.</span>
+                <!-- end::Content -->
+              </div>
+              <!-- end::Wrapper -->
+            </div>
+            <!-- end::Alert -->
+          {% endif %}
+        </div>
+        <!-- end::Card body -->
+      </div>
+      <!-- end::Card -->
+    </div>
+    <!-- end::Post -->
+  </div>
+  <!-- end::Container -->
+  {% include 'dashboard/employeesPages/addEmployee.html' %}
+{% endblock %}
+{% block extraScript %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.querySelector('[data-kt-user-table-filter="search"]')
+      const tableRows = document.querySelectorAll('table tbody tr')
+    
+      searchInput.addEventListener('keyup', function () {
+        const query = this.value.toLowerCase()
+    
+        tableRows.forEach((row) => {
+          // Get all text inside the row
+          const rowText = row.innerText.toLowerCase()
+    
+          if (rowText.includes(query)) {
+            row.style.display = ''
+          } else {
+            row.style.display = 'none'
+          }
+        })
+      })
+    })
+  </script>
+{% endblock %}
