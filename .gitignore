@@ -1,0 +1,9 @@
+venv/
+*.pyc
+__pycache__/
+db.sqlite3
+*.sqlite3
+staticfiles/
+media/
+*.log
+templates.zip

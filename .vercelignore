@@ -1,0 +1,10 @@
+venv/
+static/
+staticfiles/
+media/
+db.sqlite3
+*.sqlite3
+templates.zip
+*.log
+__pycache__/
+*.pyc
