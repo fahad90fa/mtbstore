@@ -3,12 +3,7 @@ from django.db import models
 import uuid
 
 def generate_mtb_uuid():
-    from .models import CustomUser  # Avoid circular import if inside models.py
-
-    while True:
-        new_id = f"MTB{uuid.uuid4().hex[:10]}"
-        if not CustomUser.objects.filter(mtb_id=new_id).exists():
-            return new_id
+    return f"MTB{uuid.uuid4().hex[:10]}"
     
 class CustomUser(AbstractUser):
     mtb_id = models.CharField(max_length=20, default=generate_mtb_uuid, editable=False)
