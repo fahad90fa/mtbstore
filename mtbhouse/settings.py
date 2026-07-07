@@ -94,17 +94,22 @@ WSGI_APPLICATION = 'mtbhouse.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-# Use DATABASE_URL (Railway Postgres) if provided
+DATABASES = {}
 DATABASE_URL = os.environ.get('DATABASE_URL')
+
 if DATABASE_URL:
     DATABASES['default'] = dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+else:
+    sqlite_path = os.environ.get('SQLITE_DB_PATH')
+    if not sqlite_path:
+        sqlite_path = '/tmp/mtbhouse.sqlite3' if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('RAILWAY_RUN_UID') else str(BASE_DIR / 'db.sqlite3')
+    sqlite_dir = Path(sqlite_path).parent
+    sqlite_dir.mkdir(parents=True, exist_ok=True)
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': sqlite_path,
+    }
+
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Password validation
@@ -151,7 +156,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 # Managing media
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT', '/tmp/media' if os.environ.get('RAILWAY_ENVIRONMENT') or os.environ.get('RAILWAY_RUN_UID') else os.path.join(BASE_DIR, 'media'))
+Path(MEDIA_ROOT).mkdir(parents=True, exist_ok=True)
 MEDIA_URL = '/media/'
 
 
