@@ -4,12 +4,8 @@ import uuid
 
 
 def generate_invoice_uuid():
-    from .models import Invoice  # Avoid circular import if inside models.py
-
-    while True:
-        new_id = f"INV{uuid.uuid4().hex[:6]}"
-        if not Invoice.objects.filter(invoice_id=new_id).exists():
-            return new_id
+    # Avoid database access at import time — return a random ID.
+    return f"INV{uuid.uuid4().hex[:6]}"
         
 
 
