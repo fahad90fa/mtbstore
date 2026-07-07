@@ -10,13 +10,19 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-zk*z+cvinltntrw0niw32
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '*.up.railway.app', '*.railway.app', '*.vercel.app']
 if os.environ.get('ALLOWED_HOSTS'):
-    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
+    ALLOWED_HOSTS.extend([host.strip() for host in os.environ.get('ALLOWED_HOSTS').split(',') if host.strip()])
 
-vercel_host = os.environ.get('VERCEL_URL')
-if vercel_host:
-    ALLOWED_HOSTS.append(vercel_host)
+host_candidates = []
+for env_key in ('RAILWAY_PUBLIC_DOMAIN', 'RAILWAY_PRIVATE_DOMAIN', 'VERCEL_URL', 'HOSTNAME'):
+    value = os.environ.get(env_key)
+    if value:
+        host_candidates.append(value)
+
+for host in host_candidates:
+    if host and host not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(host)
 
 # Trust the production domain for CSRF checks and HTTPS requests behind the proxy
 CSRF_TRUSTED_ORIGINS = [
@@ -25,12 +31,12 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
 ]
-
 if os.environ.get('CSRF_TRUSTED_ORIGINS'):
-    CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS').split(',')
-if vercel_host:
-    CSRF_TRUSTED_ORIGINS.append(f'https://{vercel_host}')
-    CSRF_TRUSTED_ORIGINS.append(f'http://{vercel_host}')
+    CSRF_TRUSTED_ORIGINS.extend([origin.strip() for origin in os.environ.get('CSRF_TRUSTED_ORIGINS').split(',') if origin.strip()])
+for host in host_candidates:
+    if host:
+        CSRF_TRUSTED_ORIGINS.append(f'https://{host}')
+        CSRF_TRUSTED_ORIGINS.append(f'http://{host}')
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_COOKIE_SECURE = not DEBUG
